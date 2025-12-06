@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--========== BOX ICONS ==========-->
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+    <!--========== CSS ==========-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='web.css') }}">
+
+    <title>ShopSense - Analyse Prédictive Client</title>
+</head>
+<body>
+
+    <!--========== SCROLL TOP ==========-->
+    <a href="#" class="scrolltop" id="scroll-top">
+        <i class='bx bx-chevron-up scrolltop__icon'></i>
+    </a>
+
+    <!--========== HEADER ==========-->
+    <header class="l-header" id="header">
+        <nav class="nav bd-container">
+            <a href="#" class="nav__logo">PredictMyCustomer</a>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#home" class="nav__link active-link">Accueil</a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link">À propos</a></li>
+                    <li class="nav__item"><a href="#services" class="nav__link">Services</a></li>
+
+                    <li><i class='bx bx-moon change-theme' id="theme-button"></i></li>
+                </ul>
+            </div>
+
+            <div class="nav__toggle" id="nav-toggle">
+                <i class='bx bx-menu'></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="l-main">
+        <!--========== HOME ==========-->
+        <section class="home" id="home">
+            <div class="home__container bd-container bd-grid">
+                <div class="home__data">
+                    <h1 class="home__title">ShopSense</h1>
+                    <h2 class="home__subtitle">Quand la data devine vos futurs clients</h2>
+                    <p class="home__description">Découvrez une nouvelle façon d'interpréter les données clients : transformez les chiffres en émotions, et les prédictions en stratégies gagnantes.
+                                        Grâce à l'intelligence des données, notre plateforme anticipe les tendances d'achat et aide les entreprises à comprendre leurs clients comme jamais auparavant.
+</p>
+                </div>
+
+                <div class="home__3d-container" id="canvas-container"></div>
+            </div>
+        </section>
+        
+        <!--========== ABOUT ==========-->
+        <section class="about section bd-container" id="about">
+            <div class="about__container bd-grid">
+                <div class="about__data">
+                    <span class="section-subtitle about__initial">Notre Mission</span>
+                    <h2 class="section-title about__initial">Prédire le comportement client</h2>
+                    <p class="about__description">   Découvrez une nouvelle façon d’interpréter les données clients : transformez les chiffres en émotions, 
+                et les prédictions en stratégies gagnantes. Grâce à notre plateforme, les entreprises peuvent anticiper 
+                les tendances d’achat et comprendre leurs clients comme jamais auparavant.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+     <!--========== SERVICES ==========-->
+<section class="services section bd-container" id="services">
+    <span class="section-subtitle">Nos Solutions</span>
+    <h2 class="section-title">Choisissez votre analyse</h2>
+
+    <div class="services__container bd-grid">
+        <!-- 1. Analyse de Valeur -->
+        <div class="services__content">
+            <i class='bx bx-line-chart services__icon'></i>
+            <h3 class="services__title">Analyse de Valeur Client</h3>
+            <p class="services__description">
+                Identifiez vos clients les plus fidèles et rentables. Comprenez qui achète le plus, qui revient régulièrement, et qui mérite votre attention particulière.
+            </p>
+            <a href="/predict-form" class="button" style="text-decoration: none;">Analyser un Client</a>
+        </div>
+
+        <!-- 2. Segmentation -->
+        <div class="services__content">
+            <i class='bx bx-user services__icon'></i>
+            <h3 class="services__title">Segmentation</h3>
+            <p class="services__description">
+                Divisez vos clients en groupes homogènes selon leur âge, revenu ou fréquence d'achat pour mieux cibler vos stratégies marketing.
+            </p>
+         <button class="button" onclick="showForm('preferences')">Commencer</button>
+        </div>
+
+        <!-- 3. Recommandation -->
+        <div class="services__content">
+            <i class='bx bx-shopping-bag services__icon'></i>
+            <h3 class="services__title">Recommandation</h3>
+            <p class="services__description">
+                Offrez à chaque client des produits personnalisés grâce à un système de recommandation intelligent fondé sur leurs préférences et comportements passés.
+            </p>
+           <button class="button" onclick="showForm('prediction')">Commencer</button>
+        </div>
+    </div>
+</section>
+
+<!--========== DEMOGRAPHIC FORM ==========-->
+<section class="form-section" id="demographic-form">
+    <div class="bd-container">
+        <h2 class="section-title">Formulaire de prédiction</h2>
+        <p class="section-subtitle">Saisissez les informations du client pour analyser et prédire son comportement d’achat.</p>
+
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label>Tranche d'âge du client</label>
+                    <select>
+                        <option>18-25 ans</option>
+                        <option>26-35 ans</option>
+                        <option>36-45 ans</option>
+                        <option>46-60 ans</option>
+                        <option>60+ ans</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <select>
+                        <option>Homme</option>
+                        <option>Femme</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Revenu mensuel estimé (USD)</label>
+                    <input type="number" placeholder="Ex: 2500">
+                </div>
+                <div class="form-group">
+                    <label>Localisation du client</label>
+                    <input type="text" placeholder="Ville ou région">
+                </div>
+                <div class="form-group">
+                    <label>Fréquence moyenne d’achat</label>
+                    <select>
+                        <option>Faible</option>
+                        <option>Moyenne</option>
+                        <option>Élevée</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="button">Analyser le profil</button>
+                    <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+ <!--========== PREFERENCES FORM ==========-->
+<section class="form-section" id="preferences-form">
+    <div class="bd-container">
+        <h2 class="section-title">Segmentation des clients</h2>
+        <p class="section-subtitle">Identifiez le profil d’un client selon ses habitudes d’achat et ses préférences.</p>
+
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label>Type de produits achetés</label>
+                    <select>
+                        <option>accessories</option>
+                        <option>footwear</option>
+                        <option>clothing</option>
+                        <option>outerwear</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fréquence moyenne d’achat</label>
+                    <select>
+                        <option>Faible</option>
+                        <option>Moyenne</option>
+                        <option>Élevée</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Dépense moyenne par achat (USD)</label>
+                    <input type="number" placeholder="Ex: 120">
+                </div>
+
+                <div class="form-group">
+                    <label>Canal d’achat principal</label>
+                    <select>
+                        <option>En ligne</option>
+                        <option>En magasin</option>
+                        <option>Mixte (les deux)</option>
+                    </select>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="button">Analyser le segment</button>
+                    <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!--========== PREDICTION FORM ==========-->
+<section class="form-section" id="prediction-form">
+    <div class="bd-container">
+        <h2 class="section-title">Recommandations personnalisées</h2>
+        <p class="section-subtitle">Analysez l’historique d’un client pour lui suggérer les produits les plus adaptés.</p>
+
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label>Nombre de mois d’historique d’achat</label>
+                    <input type="number" placeholder="Ex: 12">
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre total d’achats effectués</label>
+                    <input type="number" placeholder="Ex: 25">
+                </div>
+
+                <div class="form-group">
+                    <label>Dépense totale cumulée (USD)</label>
+                    <input type="number" placeholder="Ex: 1500">
+                </div>
+
+                <div class="form-group">
+                    <label>Taux d’engagement marketing</label>
+                    <select>
+                        <option>Très engagé (ouvre souvent les offres)</option>
+                        <option>Moyennement engagé</option>
+                        <option>Peu engagé</option>
+                        <option>Non réactif</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Préférences détectées</label>
+                    <textarea placeholder="Ex: préfère les articles de mode en solde, aime les achats saisonniers..."></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="button">Générer la recommandation</button>
+                    <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!--========== FOOTER ==========-->
+<footer class="footer section bd-container">
+    <div class="footer__container bd-grid">
+        <!-- Logo et description -->
+        <div class="footer__content">
+            <a href="#" class="footer__logo">DataPredict</a>
+            <span class="footer__description">Solutions d'Analyse Prédictive</span>
+            <div class="footer__socials">
+                <a href="#" class="footer__social"><i class='bx bxl-facebook'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-instagram'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-twitter'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-linkedin'></i></a>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="footer__content">
+            <h3 class="footer__title">Services</h3>
+            <ul>
+                <li><a href="#" class="footer__link">Analyse Démographique</a></li>
+                <li><a href="#" class="footer__link">Segmentation Clients</a></li>
+                <li><a href="#" class="footer__link">Prédiction des Achats</a></li>
+                <li><a href="#" class="footer__link">Rapports Personnalisés</a></li>
+            </ul>
+        </div>
+
+        <!-- Information -->
+        <div class="footer__content">
+            <h3 class="footer__title">Informations</h3>
+            <ul>
+                <li><a href="#" class="footer__link">À propos de nous</a></li>
+                <li><a href="#" class="footer__link">Contact</a></li>
+                <li><a href="#" class="footer__link">Politique de confidentialité</a></li>
+                <li><a href="#" class="footer__link">Conditions d'utilisation</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer__content">
+            <h3 class="footer__title">Contact</h3>
+            <ul>
+                <li>Tunis</li>
+                <li>Data Analytics Team</li>
+                <li>+216  23 456 789</li>
+                <li><a href="mailto:contact@datapredict.com" class="footer__link">contact@datapredict.com</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <p class="footer__copy">&#169; 2025 DataPredict. Tous droits réservés.</p>
+</footer>
+
+
+    <!--========== THREE.JS ==========-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!--========== SCROLL REVEAL ==========-->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!--========== MAIN JS ==========-->
+    <script src="{{ url_for('static', filename='web.js') }}"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
