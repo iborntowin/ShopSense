@@ -286,6 +286,31 @@
                                 </div>
                                 
                                 <div class="col-md-4 mb-3">
+                                    <label for="payment" class="form-label">
+                                        <i class="fas fa-credit-card feature-icon"></i>Payment
+                                    </label>
+                                    <select class="form-select" id="payment" name="payment" required>
+                                        {% for option in categories['Payment Method'] %}
+                                        <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="frequency" class="form-label">
+                                        <i class="fas fa-calendar-alt feature-icon"></i>Purchase Frequency
+                                    </label>
+                                    <select class="form-select" id="frequency" name="frequency" required>
+                                        {% for option in categories['Frequency of Purchases'] %}
+                                        <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Row 6 -->
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
                                     <label for="discount" class="form-label">
                                         <i class="fas fa-percent feature-icon"></i>Discount
                                     </label>
@@ -321,10 +346,10 @@
                     <div class="card-body">
                         <p><strong>Optimized predictions using:</strong></p>
                         <ul class="mb-0">
-                            <li>14 essential features (no redundancy)</li>
+                            <li>29 essential features with one-hot encoding</li>
                             <li>Logistic Regression with regularization</li>
                             <li>Natural class distribution (no SMOTE)</li>
-                            <li>80.6% accuracy, 0% overfitting</li>
+                            <li>81.7% accuracy, no overfitting</li>
                         </ul>
                         <hr>
                         <div class="mb-3">
@@ -412,6 +437,7 @@
                 subscription: document.getElementById('subscription').value,
                 shipping: document.getElementById('shipping').value,
                 payment: document.getElementById('payment').value,
+                frequency: document.getElementById('frequency').value,
                 discount: document.getElementById('discount').value,
                 promo: document.getElementById('promo').value
             };

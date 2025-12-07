@@ -26,7 +26,7 @@ print("="*80)
 # STEP 1: LOAD AND PREPARE DATA
 # ============================================================================
 print("\n[1/6] Loading data...")
-df = pd.read_csv('shopping_behavior_updated (1).csv')
+df = pd.read_csv('shopping_trends_cleanfinal.csv')
 df = df[df['Age'] != 2].reset_index(drop=True)  # Remove invalid rows
 print(f"✓ Loaded {len(df)} customer records")
 
@@ -42,16 +42,24 @@ df['Purchase_Score'] = (df['Purchase Amount (USD)'] - df['Purchase Amount (USD)'
 df['Previous_Purchases_Score'] = (df['Previous Purchases'] - df['Previous Purchases'].min()) / (df['Previous Purchases'].max() - df['Previous Purchases'].min())
 df['Rating_Score'] = df['Review Rating'] / 5.0
 df['Engagement_Score'] = (df['NumWebVisitsMonth'] - df['NumWebVisitsMonth'].min()) / (df['NumWebVisitsMonth'].max() - df['NumWebVisitsMonth'].min())
-df['Subscription_Score'] = df['Subscription Status'].map({'Yes': 1, 'No': 0})
-df['Frequency_Score'] = df['Frequency of Purchases'].map({
-    'Weekly': 1.0,
-    'Fortnightly': 0.75,
-    'Bi-Weekly': 0.85,
-    'Monthly': 0.5,
-    'Quarterly': 0.25,
-    'Every 3 Months': 0.30,
-    'Annually': 0
-})
+# Subscription Status is already 0/1 encoded in the CSV
+df['Subscription_Score'] = df['Subscription Status']
+
+# Calculate Frequency_Score from one-hot encoded columns (case-sensitive)
+freq_score = 0
+if 'Frequency of Purchases_weekly' in df.columns:
+    freq_score += df['Frequency of Purchases_weekly'] * 1.0
+if 'Frequency of Purchases_fortnightly' in df.columns:
+    freq_score += df['Frequency of Purchases_fortnightly'] * 0.75
+if 'Frequency of Purchases_bi-weekly' in df.columns:
+    freq_score += df['Frequency of Purchases_bi-weekly'] * 0.85
+if 'Frequency of Purchases_monthly' in df.columns:
+    freq_score += df['Frequency of Purchases_monthly'] * 0.5
+if 'Frequency of Purchases_quarterly' in df.columns:
+    freq_score += df['Frequency of Purchases_quarterly'] * 0.25
+if 'Frequency of Purchases_every 3 months' in df.columns:
+    freq_score += df['Frequency of Purchases_every 3 months'] * 0.30
+df['Frequency_Score'] = freq_score
 
 # Composite customer value score - BALANCED weights
 df['Customer_Value'] = (
@@ -85,58 +93,54 @@ numerical_features = [
     'NumWebVisitsMonth',      # Engagement
 ]
 
-# CATEGORICAL FEATURES (6 most important)
-categorical_features = [
-    'Subscription Status',    # Strong indicator of loyalty
-    'Gender',                 # Demographics
-    'Category',               # Product preference
-    'Shipping Type',          # Service preference
-    'Discount Applied',       # Price sensitivity
-    'Promo Code Used',        # Deal-seeking behavior
-]
+# Get one-hot encoded categorical columns from the dataset
+item_cols = [col for col in df.columns if col.startswith('Item Purchased_')]
+location_cols = [col for col in df.columns if col.startswith('Location_')]
+size_cols = [col for col in df.columns if col.startswith('Size_')]
+color_cols = [col for col in df.columns if col.startswith('Color_')]
+season_cols = [col for col in df.columns if col.startswith('Season_')]
+shipping_cols = [col for col in df.columns if col.startswith('Shipping Type_')]
+payment_cols = [col for col in df.columns if col.startswith('Payment Method_')]
+frequency_cols = [col for col in df.columns if col.startswith('Frequency of Purchases_')]
 
 print(f"✓ Selected {len(numerical_features)} numerical features")
-print(f"✓ Selected {len(categorical_features)} categorical features")
+print(f"✓ Found {len(item_cols)} item categories, {len(location_cols)} locations")
 
 # ============================================================================
 # STEP 4: FEATURE ENGINEERING (MINIMAL, INTERPRETABLE)
 # ============================================================================
 print("\n[4/6] Engineering features...")
 
-# Encode categorical variables (simple binary/label encoding)
-from sklearn.preprocessing import LabelEncoder
-
-label_encoders = {}
-for col in categorical_features:
-    le = LabelEncoder()
-    df[f'{col}_encoded'] = le.fit_transform(df[col])
-    label_encoders[col] = le
+# Categorical variables are already encoded in the CSV (Gender, Category, etc. are numeric)
+# No need for LabelEncoder
 
 # Create ONLY 4 meaningful engineered features
-df['Income_Per_1k'] = df['Income'] / 1000
+# NOTE: Numerical features are ALREADY NORMALIZED in the CSV (mean=0, std=1)
+# So we work in normalized space - engineered features are products of normalized values
+df['Income_Per_1k'] = df['Income']  # Already normalized, no need to divide by 1000
 df['Loyalty_Score'] = df['Previous Purchases'] * df['Review Rating']
 df['Engagement_Level'] = df['NumWebVisitsMonth'] * df['Review Rating']
-df['Price_Sensitive'] = ((df['Discount Applied'] == 'Yes') | (df['Promo Code Used'] == 'Yes')).astype(int)
+# Discount Applied and Promo Code Used are already 0/1
+df['Price_Sensitive'] = ((df['Discount Applied'] == 1) | (df['Promo Code Used'] == 1)).astype(int)
 
 print("✓ Created 4 engineered features")
 
-# Final feature list (15 features total - balanced)
+# Final feature list - use key features including some one-hot encoded columns
 feature_cols = [
     'Age',
     'Income_Per_1k',
     'Previous Purchases',
     'Review Rating',
     'NumWebVisitsMonth',
-    'Subscription Status_encoded',
-    'Gender_encoded',
-    'Category_encoded',
-    'Shipping Type_encoded',
-    'Discount Applied_encoded',
-    'Promo Code Used_encoded',
+    'Subscription Status',
+    'Gender',
+    'Category',
+    'Discount Applied',
+    'Promo Code Used',
     'Loyalty_Score',
     'Engagement_Level',
     'Price_Sensitive'
-]
+] + shipping_cols + payment_cols + frequency_cols
 
 X = df[feature_cols]
 y = df['High_Value_Customer']
@@ -336,7 +340,7 @@ print("="*80)
 
 joblib.dump(best_model, 'best_customer_classification_model.pkl')
 joblib.dump(scaler, 'feature_scaler.pkl')
-joblib.dump(label_encoders, 'label_encoders.pkl')
+# No label encoders needed - categorical variables are already encoded in the CSV
 
 feature_info = {
     'feature_cols': feature_cols,

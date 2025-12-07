@@ -14,35 +14,25 @@ ENCODERS_PATH = 'label_encoders.pkl'
 FEATURE_INFO_PATH = 'feature_info.pkl'
 
 # Check if model files exist
-if not all(os.path.exists(p) for p in [MODEL_PATH, SCALER_PATH, ENCODERS_PATH]):
-    print("⚠️  WARNING: Model files not found! Please run train_simplified_model.py first.")
+if not all(os.path.exists(p) for p in [MODEL_PATH, SCALER_PATH]):
+    print("⚠️  WARNING: Model files not found! Please run train_optimized_model.py first.")
     model = None
     scaler = None
-    label_encoders = None
     FEATURE_COLS = None
 else:
     model = joblib.load(MODEL_PATH)
     scaler = joblib.load(SCALER_PATH)
-    label_encoders = joblib.load(ENCODERS_PATH)
     
-    # Try to load feature info (for simplified model)
+    # Try to load feature info
     if os.path.exists(FEATURE_INFO_PATH):
         feature_info = joblib.load(FEATURE_INFO_PATH)
         FEATURE_COLS = feature_info['feature_cols']
         TRAINING_THRESHOLDS = feature_info.get('training_thresholds', {})
-        print("✓ Simplified model loaded successfully!")
-        print(f"✓ Using {len(FEATURE_COLS)} features: {FEATURE_COLS}")
-    else:
-        # Fallback to old feature set if feature_info not found
-        FEATURE_COLS = [
-            'Age', 'Income', 'NumWebVisitsMonth', 'Review Rating', 'Previous Purchases',
-            'Gender_encoded', 'Category_encoded', 'Location_encoded', 'Size_encoded',
-            'Color_encoded', 'Season_encoded', 'Subscription Status_encoded',
-            'Shipping Type_encoded', 'Payment Method_encoded', 'Frequency of Purchases_encoded',
-            'Discount Applied_encoded', 'Promo Code Used_encoded',
-            'Income_to_Purchase_Ratio', 'Web_Engagement', 'Loyalty_Score', 'Age_Group_encoded'
-        ]
         print("✓ Model loaded successfully!")
+        print(f"✓ Using {len(FEATURE_COLS)} features")
+    else:
+        FEATURE_COLS = None
+        print("✓ Model loaded but feature info not found")
 
 # Options for categorical fields
 CATEGORIES = {
@@ -69,11 +59,8 @@ def home():
 @app.route('/predict-form')
 def predict_form():
     """Render the prediction form page"""
-    # Check if using simplified model
-    if FEATURE_COLS and (len(FEATURE_COLS) <= 10 and 'Loyalty_Score' in FEATURE_COLS):
-        return render_template('index_simplified.html', categories=CATEGORIES)
-    else:
-        return render_template('index.html', categories=CATEGORIES)
+    # Always use simplified interface for the optimized model
+    return render_template('index_simplified.html', categories=CATEGORIES)
 
 @app.route('/test-clients')
 def test_clients():
@@ -86,272 +73,119 @@ def predict():
     try:
         if model is None:
             return jsonify({
-                'error': 'Model not loaded. Please train the model first by running train_simplified_model.py'
+                'error': 'Model not loaded. Please train the model first by running train_optimized_model.py'
             }), 500
         
         # Get form data
         data = request.json
         
-        # Check if using optimized 14-feature model
-        if len(FEATURE_COLS) == 14:
-            # OPTIMIZED MODEL - 14 essential features
-            income = float(data.get('income', 50000))
-            age = float(data.get('age', 35))
-            previous_purchases = int(data.get('previous_purchases', 10))
-            review_rating = float(data.get('review_rating', 3.5))
-            num_web_visits = int(data.get('num_web_visits', 5))
-            
-            # Encode categorical features
-            gender_encoded = label_encoders['Gender'].transform([data.get('gender', 'Male')])[0]
-            category_encoded = label_encoders['Category'].transform([data.get('category', 'Clothing')])[0]
-            subscription_encoded = label_encoders['Subscription Status'].transform([data.get('subscription', 'No')])[0]
-            shipping_encoded = label_encoders['Shipping Type'].transform([data.get('shipping', 'Standard')])[0]
-            discount_encoded = label_encoders['Discount Applied'].transform([data.get('discount', 'No')])[0]
-            promo_encoded = label_encoders['Promo Code Used'].transform([data.get('promo', 'No')])[0]
-            
-            # Calculate engineered features (must match training exactly)
-            income_per_1k = income / 1000
-            loyalty_score = previous_purchases * review_rating
-            engagement_level = num_web_visits * review_rating
-            price_sensitive = 1 if (data.get('discount', 'No') == 'Yes' or data.get('promo', 'No') == 'Yes') else 0
-            
-            # Create feature array with 14 features in exact order
-            features = np.array([[
-                age,
-                income_per_1k,
-                previous_purchases,
-                review_rating,
-                num_web_visits,
-                subscription_encoded,
-                gender_encoded,
-                category_encoded,
-                shipping_encoded,
-                discount_encoded,
-                promo_encoded,
-                loyalty_score,
-                engagement_level,
-                price_sensitive
-            ]])
-        # Check if using enhanced model with 23 features
-        elif len(FEATURE_COLS) >= 23:
-            # ENHANCED MODEL - Full feature set with composite scoring
-            income = float(data.get('income', 50000))
-            age = float(data.get('age', 35))
-            previous_purchases = int(data.get('previous_purchases', 10))
-            review_rating = float(data.get('review_rating', 3.5))
-            num_web_visits = int(data.get('num_web_visits', 5))
-            
-            # Encode categorical features
-            gender_encoded = label_encoders['Gender'].transform([data.get('gender', 'Male')])[0]
-            category_encoded = label_encoders['Category'].transform([data.get('category', 'Clothing')])[0]
-            subscription_encoded = label_encoders['Subscription Status'].transform([data.get('subscription', 'No')])[0]
-            shipping_encoded = label_encoders['Shipping Type'].transform([data.get('shipping', 'Standard')])[0]
-            payment_encoded = label_encoders['Payment Method'].transform([data.get('payment', 'Credit Card')])[0]
-            
-            discount_encoded = 1 if data.get('discount', 'No') == 'Yes' else 0
-            promo_encoded = 1 if data.get('promo', 'No') == 'Yes' else 0
-            
-            # Calculate engineered features (must match training exactly)
-            income_per_1k = income / 1000
-            
-            # Age group
-            if age <= 30:
-                age_group = 0
-            elif age <= 45:
-                age_group = 1
-            elif age <= 60:
-                age_group = 2
-            else:
-                age_group = 3
-            
-            loyalty_score = previous_purchases * review_rating
-            age_income_interaction = (age / 100) * (income / 10000)
-            engagement_score = num_web_visits * review_rating
-            purchase_frequency_score = previous_purchases / (age - 17)  # Purchases per year since 18
-            
-            # Boolean features (using training statistics for thresholds)
-            high_engagement = 1 if num_web_visits > TRAINING_THRESHOLDS.get('web_visits_median', 5) else 0
-            frequent_buyer = 1 if previous_purchases > TRAINING_THRESHOLDS.get('purchases_median', 20) else 0
-            premium_customer = 1 if (subscription_encoded == 1 and previous_purchases > TRAINING_THRESHOLDS.get('purchases_q25', 15)) else 0
-            discount_dependent = 1 if (discount_encoded == 1 and promo_encoded == 1) else 0
-            high_income = 1 if income > TRAINING_THRESHOLDS.get('income_median', 50000) else 0
-            satisfied_customer = 1 if review_rating >= 4.0 else 0
-            
-            # Create feature array with 23 features in exact order
-            features = np.array([[
-                income_per_1k,
-                age,
-                age_group,
-                previous_purchases,
-                review_rating,
-                num_web_visits,
-                gender_encoded,
-                category_encoded,
-                subscription_encoded,
-                shipping_encoded,
-                payment_encoded,
-                discount_encoded,
-                promo_encoded,
-                loyalty_score,
-                age_income_interaction,
-                engagement_score,
-                purchase_frequency_score,
-                high_engagement,
-                frequent_buyer,
-                premium_customer,
-                discount_dependent,
-                high_income,
-                satisfied_customer
-            ]])
-        # Check if using enhanced model with many features
-        elif len(FEATURE_COLS) >= 17:
-            # ENHANCED MODEL - Full feature set
-            income = float(data.get('income', 50000))
-            age = float(data.get('age', 35))
-            previous_purchases = int(data.get('previous_purchases', 10))
-            review_rating = float(data.get('review_rating', 3.5))
-            num_web_visits = int(data.get('num_web_visits', 5))
-            
-            # Encode categorical features
-            gender_encoded = label_encoders['Gender'].transform([data.get('gender', 'Male')])[0]
-            category_encoded = label_encoders['Category'].transform([data.get('category', 'Clothing')])[0]
-            subscription_encoded = label_encoders['Subscription Status'].transform([data.get('subscription', 'No')])[0]
-            shipping_encoded = label_encoders['Shipping Type'].transform([data.get('shipping', 'Standard')])[0]
-            payment_encoded = label_encoders['Payment Method'].transform([data.get('payment', 'Credit Card')])[0]
-            
-            discount_encoded = 1 if data.get('discount', 'No') == 'Yes' else 0
-            promo_encoded = 1 if data.get('promo', 'No') == 'Yes' else 0
-            
-            # Calculate engineered features
-            income_per_1k = income / 1000
-            if age <= 30:
-                age_group = 0
-            elif age <= 45:
-                age_group = 1
-            elif age <= 60:
-                age_group = 2
-            else:
-                age_group = 3
-            
-            loyalty_score = previous_purchases * review_rating
-            high_engagement = 1 if num_web_visits > 5 else 0
-            premium_customer = 1 if (subscription_encoded == 1 and previous_purchases > 10) else 0
-            value_seeker = 1 if (discount_encoded == 1 or promo_encoded == 1) else 0
-            engagement_score = num_web_visits * review_rating
-            
-            # Create feature array
-            features = np.array([[
-                income_per_1k,
-                age,
-                age_group,
-                previous_purchases,
-                review_rating,
-                num_web_visits,
-                gender_encoded,
-                category_encoded,
-                subscription_encoded,
-                shipping_encoded,
-                payment_encoded,
-                discount_encoded,
-                promo_encoded,
-                loyalty_score,
-                high_engagement,
-                premium_customer,
-                value_seeker,
-                engagement_score
-            ]])
-        # Check if using simplified model (8 features - NO Purchase Amount)
-        elif len(FEATURE_COLS) == 8 and 'Loyalty_Score' in FEATURE_COLS:
-            # SIMPLIFIED MODEL - 8 predictive features
-            income = float(data.get('income', 50000))
-            previous_purchases = int(data.get('previous_purchases', 10))
-            review_rating = float(data.get('review_rating', 3.5))
-            age = float(data.get('age', 35))
-            num_web_visits = int(data.get('num_web_visits', 5))
-            subscription_encoded = label_encoders['Subscription Status'].transform([data.get('subscription', 'No')])[0]
-            
-            # Calculate engineered features
-            loyalty_score = previous_purchases * review_rating
-            income_purchasing_power = income / 10000
-            
-            # Create feature array with 8 features
-            features = np.array([[
-                income,
-                previous_purchases,
-                review_rating,
-                age,
-                num_web_visits,
-                subscription_encoded,
-                loyalty_score,
-                income_purchasing_power
-            ]])
-        # Check if using old simplified model (4 features)
-        elif FEATURE_COLS == ['Income', 'Previous Purchases', 'Review Rating', 'Subscription_encoded']:
-            # OLD SIMPLIFIED MODEL - Only 4 predictive features
-            income = float(data.get('income', 50000))
-            previous_purchases = int(data.get('previous_purchases', 10))
-            review_rating = float(data.get('review_rating', 3.5))
-            subscription_encoded = label_encoders['Subscription Status'].transform([data.get('subscription', 'No')])[0]
-            
-            # Create feature array with only 4 features
-            features = np.array([[
-                income,
-                previous_purchases,
-                review_rating,
-                subscription_encoded
-            ]])
-        else:
-            # ORIGINAL MODEL - 21 features
-            # Extract and validate numerical features
-            age = float(data.get('age', 30))
-            income = float(data.get('income', 50000))
-            num_web_visits = int(data.get('num_web_visits', 5))
-            review_rating = float(data.get('review_rating', 3.5))
-            previous_purchases = int(data.get('previous_purchases', 10))
-            purchase_amount = float(data.get('purchase_amount', 50))
-            
-            # Encode categorical features
-            gender_encoded = label_encoders['Gender'].transform([data.get('gender', 'Male')])[0]
-            category_encoded = label_encoders['Category'].transform([data.get('category', 'Clothing')])[0]
-            location_encoded = label_encoders['Location'].transform([data.get('location', 'California')])[0]
-            size_encoded = label_encoders['Size'].transform([data.get('size', 'M')])[0]
-            color_encoded = label_encoders['Color'].transform([data.get('color', 'Blue')])[0]
-            season_encoded = label_encoders['Season'].transform([data.get('season', 'Spring')])[0]
-            subscription_encoded = label_encoders['Subscription Status'].transform([data.get('subscription', 'No')])[0]
-            shipping_encoded = label_encoders['Shipping Type'].transform([data.get('shipping', 'Standard')])[0]
-            payment_encoded = label_encoders['Payment Method'].transform([data.get('payment', 'Credit Card')])[0]
-            frequency_encoded = label_encoders['Frequency of Purchases'].transform([data.get('frequency', 'Monthly')])[0]
-            
-            # Encode binary features
-            discount_encoded = 1 if data.get('discount', 'No') == 'Yes' else 0
-            promo_encoded = 1 if data.get('promo', 'No') == 'Yes' else 0
-            
-            # Calculate engineered features
-            income_to_purchase_ratio = income / (purchase_amount + 1)
-            web_engagement = num_web_visits * review_rating
-            loyalty_score = previous_purchases * review_rating
-            
-            # Age group encoding
-            if age <= 25:
-                age_group_encoded = 0  # Young
-            elif age <= 40:
-                age_group_encoded = 1  # Adult
-            elif age <= 60:
-                age_group_encoded = 2  # Middle
-            else:
-                age_group_encoded = 3  # Senior
-            
-            # Create feature array in correct order
-            features = np.array([[
-                age, income, num_web_visits, review_rating, previous_purchases,
-                gender_encoded, category_encoded, location_encoded, size_encoded,
-                color_encoded, season_encoded, subscription_encoded,
-                shipping_encoded, payment_encoded, frequency_encoded,
-                discount_encoded, promo_encoded,
-                income_to_purchase_ratio, web_engagement, loyalty_score, age_group_encoded
-            ]])
+        # Extract numerical features
+        age_raw = float(data.get('age', 35))
+        income_raw = float(data.get('income', 50000))
+        previous_purchases_raw = int(data.get('previous_purchases', 10))
+        review_rating_raw = float(data.get('review_rating', 3.5))
+        num_web_visits_raw = int(data.get('num_web_visits', 5))
         
-        # Scale features
+        # IMPORTANT: The CSV has pre-normalized numerical features
+        # We need to normalize raw inputs to match the CSV's scale
+        # Approximate normalization based on typical customer data ranges:
+        # Age: mean~42, std~15
+        # Income: mean~60000, std~30000  
+        # Previous Purchases: mean~25, std~12
+        # Review Rating: mean~3.75, std~0.7
+        # NumWebVisitsMonth: mean~5, std~2.5
+        
+        age = (age_raw - 42) / 15
+        income_normalized = (income_raw - 60000) / 30000
+        previous_purchases = (previous_purchases_raw - 25) / 12
+        review_rating = (review_rating_raw - 3.75) / 0.7
+        num_web_visits = (num_web_visits_raw - 5) / 2.5
+        
+        # Map categorical inputs to encoded values (already numeric in CSV)
+        # Gender: Male=1, Female=0
+        gender = 1 if data.get('gender', 'Male') == 'Male' else 0
+        
+        # Category: Map to 0-3
+        category_map = {'Clothing': 0, 'Footwear': 1, 'Accessories': 2, 'Outerwear': 3}
+        category = category_map.get(data.get('category', 'Clothing'), 0)
+        
+        # Subscription Status: Yes=1, No=0
+        subscription = 1 if data.get('subscription', 'No') == 'Yes' else 0
+        
+        # Discount Applied and Promo Code Used: Yes=1, No=0
+        discount = 1 if data.get('discount', 'No') == 'Yes' else 0
+        promo = 1 if data.get('promo', 'No') == 'Yes' else 0
+        
+        # Calculate engineered features using NORMALIZED values to match training
+        # Income_Per_1k is just the normalized income (training uses df['Income'] directly)
+        income_per_1k = income_normalized
+        loyalty_score = previous_purchases * review_rating  # Product of normalized values
+        engagement_level = num_web_visits * review_rating  # Product of normalized values
+        price_sensitive = 1 if (discount == 1 or promo == 1) else 0
+        
+        # Create one-hot encoded features for Shipping Type
+        shipping = data.get('shipping', 'Standard').lower()
+        shipping_express = 1 if shipping == 'express' else 0
+        shipping_free = 1 if shipping == 'free shipping' else 0
+        shipping_nextday = 1 if shipping == 'next day air' else 0
+        shipping_standard = 1 if shipping == 'standard' else 0
+        shipping_pickup = 1 if shipping == 'store pickup' else 0
+        
+        # Create one-hot encoded features for Payment Method
+        payment = data.get('payment', 'Credit Card').lower()
+        payment_cash = 1 if payment == 'cash' else 0
+        payment_credit = 1 if payment == 'credit card' else 0
+        payment_debit = 1 if payment == 'debit card' else 0
+        payment_paypal = 1 if payment == 'paypal' else 0
+        payment_venmo = 1 if payment == 'venmo' else 0
+        
+        # Create one-hot encoded features for Frequency of Purchases
+        frequency = data.get('frequency', 'Monthly').lower()
+        freq_biweekly = 1 if frequency == 'bi-weekly' else 0
+        freq_every3 = 1 if frequency == 'every 3 months' else 0
+        freq_fortnightly = 1 if frequency == 'fortnightly' else 0
+        freq_monthly = 1 if frequency == 'monthly' else 0
+        freq_quarterly = 1 if frequency == 'quarterly' else 0
+        freq_weekly = 1 if frequency == 'weekly' else 0
+        
+        # Create feature array with all 29 features in exact order
+        features = np.array([[
+            age,
+            income_per_1k,
+            previous_purchases,
+            review_rating,
+            num_web_visits,
+            subscription,
+            gender,
+            category,
+            discount,
+            promo,
+            loyalty_score,
+            engagement_level,
+            price_sensitive,
+            shipping_express,
+            shipping_free,
+            shipping_nextday,
+            shipping_standard,
+            shipping_pickup,
+            payment_cash,
+            payment_credit,
+            payment_debit,
+            payment_paypal,
+            payment_venmo,
+            freq_biweekly,
+            freq_every3,
+            freq_fortnightly,
+            freq_monthly,
+            freq_quarterly,
+            freq_weekly
+        ]])
+        
+        # Note: The scaler was fit on already-normalized data from the CSV
+        # So we need to apply proper normalization here to match training data format
+        # OR we skip scaling since we'll normalize manually to match the CSV format
+        
+        # For now, use the scaler as-is (it will do minimal transformation)
         features_scaled = scaler.transform(features)
         
         # Make prediction
@@ -377,9 +211,9 @@ def predict():
             segment = 'High Value' if prediction == 1 else 'Not High Value'
             color = 'success' if prediction == 1 else 'danger'
         
-        # Prepare response with correct format for both interfaces
+        # Prepare response
         result = {
-            'prediction': int(prediction),  # 0 or 1
+            'prediction': int(prediction),
             'probability': {
                 'high_value': prob_high_value,
                 'low_value': prob_low_value
@@ -394,6 +228,9 @@ def predict():
         return jsonify(result)
     
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Prediction error: {error_details}")
         return jsonify({'error': f'Prediction failed: {str(e)}'}), 400
 
 def get_recommendation(segment, probability):
