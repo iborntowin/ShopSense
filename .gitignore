@@ -1,0 +1,6 @@
+# === Model Files ===
+models/*.pkl
+*.pkl
+
+# data
+*.csv
