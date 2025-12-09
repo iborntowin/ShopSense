@@ -32,7 +32,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Create models directory if it doesn't exist
-os.makedirs('models', exist_ok=True)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+models_dir = os.path.join(script_dir, 'models')
+os.makedirs(models_dir, exist_ok=True)
 
 print("="*60)
 print("HYBRID RECOMMENDATION SYSTEM - TRAINING")
@@ -43,7 +45,11 @@ print("="*60)
 # ============================================================
 
 print("\n📥 Step 1: Loading dataset...")
-df = pd.read_csv("shopping_trends_cleanfinal.csv")
+# Get the directory of this script
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(script_dir, "shopping_trends_cleanfinal.csv")
+df = pd.read_csv(csv_path)
 print(f"✅ Dataset loaded: {df.shape[0]} customers, {df.shape[1]} features")
 
 # ============================================================
@@ -155,18 +161,18 @@ recommendation_engine = {
     'item_list': sorted(df['Purchased_Item'].dropna().unique().tolist())
 }
 
-with open('models/recommendation_engine.pkl', 'wb') as f:
+with open(os.path.join(models_dir, 'recommendation_engine.pkl'), 'wb') as f:
     pickle.dump(recommendation_engine, f)
 print("   ✅ models/recommendation_engine.pkl")
 
 # --- File 2: feature_scaler.pkl ---
 # Scaler for customer clustering features
-joblib.dump(scaler, 'models/feature_scaler.pkl')
+joblib.dump(scaler, os.path.join(models_dir, 'feature_scaler.pkl'))
 print("   ✅ models/feature_scaler.pkl")
 
 # --- File 3: kmeans_model.pkl ---
 # Trained K-Means model
-joblib.dump(kmeans, 'models/kmeans_model.pkl')
+joblib.dump(kmeans, os.path.join(models_dir, 'kmeans_model.pkl'))
 print("   ✅ models/kmeans_model.pkl")
 
 # --- File 4: feature_info.pkl ---
@@ -188,7 +194,7 @@ feature_info = {
     }
 }
 
-joblib.dump(feature_info, 'models/feature_info.pkl')
+joblib.dump(feature_info, os.path.join(models_dir, 'feature_info.pkl'))
 print("   ✅ models/feature_info.pkl")
 
 # ============================================================
@@ -199,10 +205,10 @@ print("\n🧪 Step 5: Validating saved models...")
 
 # Test loading all files
 try:
-    test_engine = pickle.load(open('models/recommendation_engine.pkl', 'rb'))
-    test_scaler = joblib.load('models/feature_scaler.pkl')
-    test_kmeans = joblib.load('models/kmeans_model.pkl')
-    test_info = joblib.load('models/feature_info.pkl')
+    test_engine = pickle.load(open(os.path.join(models_dir, 'recommendation_engine.pkl'), 'rb'))
+    test_scaler = joblib.load(os.path.join(models_dir, 'feature_scaler.pkl'))
+    test_kmeans = joblib.load(os.path.join(models_dir, 'kmeans_model.pkl'))
+    test_info = joblib.load(os.path.join(models_dir, 'feature_info.pkl'))
 
     print("   ✅ All models loaded successfully")
     print(f"   → Engine contains {len(test_engine['df'])} customer records")

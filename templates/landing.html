@@ -165,9 +165,29 @@
         <p class="section-subtitle">Identifiez le profil d’un client selon ses habitudes d’achat et ses préférences.</p>
 
         <div class="form-container">
-            <form>
+            <form id="segmentForm">
                 <div class="form-group">
-                    <label>Type de produits achetés</label>
+                    <label>Segment ID (0-3)</label>
+                    <select name="segment_id" id="segment_id" required>
+                        <option value="0">Segment 0</option>
+                        <option value="1">Segment 1</option>
+                        <option value="2">Segment 2</option>
+                        <option value="3">Segment 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre de produits à afficher</label>
+                    <input type="number" name="top_n" id="top_n" value="10" min="1" max="20">
+                </div>
+
+                <div id="segmentResult" style="display: none; margin-top: 20px; padding: 20px; background: #f0f8ff; border-radius: 10px;">
+                    <h3>Résultats de segmentation</h3>
+                    <div id="segmentContent"></div>
+                </div>
+
+                <div class="form-group" style="visibility:hidden">
+                    <label>Placeholder</label>
                     <select>
                         <option>accessories</option>
                         <option>footwear</option>

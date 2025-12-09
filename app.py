@@ -3,7 +3,11 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+import sys
 from datetime import datetime
+
+# Add recommand_model to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'recommand_model'))
 
 app = Flask(__name__)
 
@@ -448,14 +452,121 @@ def health():
     return jsonify({
         'status': 'healthy' if model is not None else 'model_not_loaded',
         'model_loaded': model is not None,
+        'recommendation_loaded': recommendation_system_loaded,
         'timestamp': datetime.now().isoformat()
     })
+
+# ============================================================================
+# RECOMMENDATION SYSTEM ROUTES
+# ============================================================================
+
+# Load recommendation system
+recommendation_system_loaded = False
+try:
+    from predict import get_recommendations, get_available_items, get_customer_info, get_segment_popular_items
+    recommendation_system_loaded = True
+    print("✓ Recommendation system loaded successfully!")
+except Exception as e:
+    print(f"⚠️  WARNING: Recommendation system not loaded: {e}")
+    print("   Run: python recommand_model/train_model.py to train the model")
+
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    """Get product recommendations for a customer"""
+    try:
+        if not recommendation_system_loaded:
+            return jsonify({
+                'error': 'Recommendation system not loaded. Please train the model first.',
+                'status': 'error'
+            }), 500
+        
+        data = request.json
+        customer_id = int(data.get('customer_id', 1))
+        top_n = int(data.get('top_n', 5))
+        
+        # Get recommendations
+        result = get_recommendations(customer_id=customer_id, top_n=top_n)
+        
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({
+            'error': f'Recommendation failed: {str(e)}',
+            'status': 'error'
+        }), 400
+
+@app.route('/segment-info', methods=['POST'])
+def segment_info():
+    """Get popular items in a customer segment"""
+    try:
+        if not recommendation_system_loaded:
+            return jsonify({
+                'error': 'Recommendation system not loaded',
+                'status': 'error'
+            }), 500
+        
+        data = request.json
+        segment_id = int(data.get('segment_id', 0))
+        top_n = int(data.get('top_n', 10))
+        
+        result = get_segment_popular_items(segment_id=segment_id, top_n=top_n)
+        
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'status': 'error'
+        }), 400
+
+@app.route('/customer-info/<int:customer_id>')
+def customer_info(customer_id):
+    """Get information about a specific customer"""
+    try:
+        if not recommendation_system_loaded:
+            return jsonify({
+                'error': 'Recommendation system not loaded',
+                'status': 'error'
+            }), 500
+        
+        result = get_customer_info(customer_id)
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'status': 'error'
+        }), 400
+
+@app.route('/available-items')
+def available_items():
+    """Get list of all available items"""
+    try:
+        if not recommendation_system_loaded:
+            return jsonify({
+                'error': 'Recommendation system not loaded',
+                'status': 'error'
+            }), 500
+        
+        items = get_available_items()
+        return jsonify({
+            'items': items,
+            'count': len(items),
+            'status': 'success'
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'status': 'error'
+        }), 400
 
 if __name__ == '__main__':
     print("\n" + "="*80)
     print("🚀 CUSTOMER VALUE PREDICTION API")
     print("="*80)
     print(f"Model Status: {'✓ Loaded' if model else '✗ Not Loaded'}")
+    print(f"Recommendation System: {'✓ Loaded' if recommendation_system_loaded else '✗ Not Loaded'}")
     print("Server starting on http://127.0.0.1:5000")
     print("Press CTRL+C to quit")
     print("="*80 + "\n")

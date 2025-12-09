@@ -34,11 +34,16 @@ warnings.filterwarnings('ignore')
 print("🔄 Loading recommendation models...")
 
 try:
+    # Get the directory of this script
+    import os
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    models_dir = os.path.join(script_dir, 'models')
+    
     # Load all 4 model files
-    recommendation_engine = pickle.load(open('models/recommendation_engine.pkl', 'rb'))
-    feature_scaler = joblib.load('models/feature_scaler.pkl')
-    kmeans_model = joblib.load('models/kmeans_model.pkl')
-    feature_info = joblib.load('models/feature_info.pkl')
+    recommendation_engine = pickle.load(open(os.path.join(models_dir, 'recommendation_engine.pkl'), 'rb'))
+    feature_scaler = joblib.load(os.path.join(models_dir, 'feature_scaler.pkl'))
+    kmeans_model = joblib.load(os.path.join(models_dir, 'kmeans_model.pkl'))
+    feature_info = joblib.load(os.path.join(models_dir, 'feature_info.pkl'))
 
     # Extract components
     df = recommendation_engine['df']

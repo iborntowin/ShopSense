@@ -174,3 +174,105 @@ function init3D() {
 
 // Initialize 3D animation after DOM loads
 window.addEventListener('DOMContentLoaded', init3D);
+
+/*==================== HANDLE SEGMENT FORM ====================*/
+document.addEventListener('DOMContentLoaded', function() {
+    const segmentForm = document.getElementById('segmentForm');
+    if (segmentForm) {
+        segmentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const segmentId = document.getElementById('segment_id').value;
+            const topN = document.getElementById('top_n').value;
+            
+            try {
+                const response = await fetch('/segment-info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        segment_id: parseInt(segmentId),
+                        top_n: parseInt(topN)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    let html = `
+                        <p><strong>Segment ${result.segment}</strong></p>
+                        <p>Taille du segment: ${result.segment_size} clients</p>
+                        <h4>Produits populaires:</h4>
+                        <ol style="text-align: left;">
+                    `;
+                    
+                    result.popular_items.forEach(item => {
+                        html += `<li>${item.item} - ${item.purchases} achats (${(item.popularity * 100).toFixed(1)}%)</li>`;
+                    });
+                    
+                    html += '</ol>';
+                    
+                    document.getElementById('segmentContent').innerHTML = html;
+                    document.getElementById('segmentResult').style.display = 'block';
+                } else {
+                    document.getElementById('segmentContent').innerHTML = `<p style="color: red;">Erreur: ${result.error}</p>`;
+                    document.getElementById('segmentResult').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('segmentContent').innerHTML = `<p style="color: red;">Erreur: ${error.message}</p>`;
+                document.getElementById('segmentResult').style.display = 'block';
+            }
+        });
+    }
+    
+    const recommendForm = document.getElementById('recommendForm');
+    if (recommendForm) {
+        recommendForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const customerId = document.getElementById('customer_id').value;
+            const topN = document.getElementById('top_n_recommend').value;
+            
+            try {
+                const response = await fetch('/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        customer_id: parseInt(customerId),
+                        top_n: parseInt(topN)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    let html = `
+                        <p><strong>Client ID:</strong> ${result.customer_id}</p>
+                        <p><strong>Article acheté:</strong> ${result.purchased_item}</p>
+                        <p><strong>Segment:</strong> ${result.segment}</p>
+                        <h4>Recommandations:</h4>
+                        <ol style="text-align: left;">
+                    `;
+                    
+                    result.recommendations.forEach(rec => {
+                        html += `<li>${rec.item} (Score: ${rec.score.toFixed(4)})</li>`;
+                    });
+                    
+                    html += '</ol>';
+                    
+                    document.getElementById('recommendContent').innerHTML = html;
+                    document.getElementById('recommendResult').style.display = 'block';
+                } else {
+                    document.getElementById('recommendContent').innerHTML = `<p style="color: red;">Erreur: ${result.error}</p>`;
+                    document.getElementById('recommendResult').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('recommendContent').innerHTML = `<p style="color: red;">Erreur: ${error.message}</p>`;
+                document.getElementById('recommendResult').style.display = 'block';
+            }
+        });
+    }
+});
