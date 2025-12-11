@@ -93,7 +93,7 @@
             <p class="services__description">
                 Divisez vos clients en groupes homogènes selon leur âge, revenu ou fréquence d'achat pour mieux cibler vos stratégies marketing.
             </p>
-         <button class="button" onclick="showForm('preferences')">Commencer</button>
+            <button class="button" onclick="showForm('preferences')">Analyser les Segments</button>
         </div>
 
         <!-- 3. Recommandation -->
@@ -103,7 +103,7 @@
             <p class="services__description">
                 Offrez à chaque client des produits personnalisés grâce à un système de recommandation intelligent fondé sur leurs préférences et comportements passés.
             </p>
-           <button class="button" onclick="showForm('prediction')">Commencer</button>
+            <button class="button" onclick="showForm('prediction')">Recommander des Produits</button>
         </div>
     </div>
 </section>
@@ -227,39 +227,6 @@
                     <div id="segmentContent"></div>
                 </div>
 
-                <div class="form-group" style="visibility:hidden">
-                    <label>Placeholder</label>
-                    <select>
-                        <option>accessories</option>
-                        <option>footwear</option>
-                        <option>clothing</option>
-                        <option>outerwear</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Fréquence moyenne d’achat</label>
-                    <select>
-                        <option>Faible</option>
-                        <option>Moyenne</option>
-                        <option>Élevée</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Dépense moyenne par achat (USD)</label>
-                    <input type="number" placeholder="Ex: 120">
-                </div>
-
-                <div class="form-group">
-                    <label>Canal d’achat principal</label>
-                    <select>
-                        <option>En ligne</option>
-                        <option>En magasin</option>
-                        <option>Mixte (les deux)</option>
-                    </select>
-                </div>
-
                 <div class="form-buttons">
                     <button type="submit" class="button">Analyser le segment</button>
                     <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
@@ -268,42 +235,27 @@
         </div>
     </div>
 </section>
-<!--========== PREDICTION FORM ==========-->
+<!--========== PREDICTION FORM (RECOMMENDATIONS) ==========-->
 <section class="form-section" id="prediction-form">
     <div class="bd-container">
         <h2 class="section-title">Recommandations personnalisées</h2>
-        <p class="section-subtitle">Analysez l’historique d’un client pour lui suggérer les produits les plus adaptés.</p>
+        <p class="section-subtitle">Obtenez des recommandations de produits basées sur l'historique d'un client.</p>
 
         <div class="form-container">
-            <form>
+            <form id="recommendForm">
                 <div class="form-group">
-                    <label>Nombre de mois d’historique d’achat</label>
-                    <input type="number" placeholder="Ex: 12">
+                    <label>ID Client (1-3900)</label>
+                    <input type="number" name="customer_id" id="customer_id" placeholder="Ex: 100" value="100" min="1" max="3900" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Nombre total d’achats effectués</label>
-                    <input type="number" placeholder="Ex: 25">
+                    <label>Nombre de recommandations</label>
+                    <input type="number" name="top_n_recommend" id="top_n_recommend" value="5" min="1" max="10">
                 </div>
 
-                <div class="form-group">
-                    <label>Dépense totale cumulée (USD)</label>
-                    <input type="number" placeholder="Ex: 1500">
-                </div>
-
-                <div class="form-group">
-                    <label>Taux d’engagement marketing</label>
-                    <select>
-                        <option>Très engagé (ouvre souvent les offres)</option>
-                        <option>Moyennement engagé</option>
-                        <option>Peu engagé</option>
-                        <option>Non réactif</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Préférences détectées</label>
-                    <textarea placeholder="Ex: préfère les articles de mode en solde, aime les achats saisonniers..."></textarea>
+                <div id="recommendResult" style="display: none; margin-top: 20px; padding: 20px; background: #f0fff0; border-radius: 10px;">
+                    <h3>Recommandations</h3>
+                    <div id="recommendContent"></div>
                 </div>
 
                 <div class="form-buttons">
