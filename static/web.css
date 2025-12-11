@@ -277,9 +277,16 @@ img{
 }
 
 /*========== HOME ==========*/
+.home{
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
 .home__container{
   height: calc(100vh - var(--header-height));
-  align-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .home__title{
@@ -310,17 +317,21 @@ img{
   display: inline-block;
   background-color: var(--first-color);
   color: #FFF;
-  padding: .75rem 1rem;
+  padding: 1rem 2rem;
   border-radius: .5rem;
-  transition: .3s;
+  transition: all .3s ease;
   border: none;
   cursor: pointer;
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
+  font-weight: var(--font-medium);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
 }
 
 .button:hover{
   background-color: var(--first-color-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
 }
 
 /*========== ABOUT ==========*/
@@ -376,16 +387,20 @@ img{
 }
 
 .form-section.active{
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem 0 1rem;
 }
 
 .form-container{
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   background-color: var(--container-color);
   padding: 2rem;
   border-radius: .5rem;
   box-shadow: 0 2px 4px rgba(3,74,40,.15);
+  text-align: center;
 }
 
 .form-group{
@@ -410,6 +425,15 @@ img{
   color: var(--text-color);
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  outline: none;
+  border-color: var(--first-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .form-group textarea{
@@ -430,6 +454,30 @@ img{
 
 .button-secondary:hover{
   background-color: var(--text-color);
+}
+
+.result-display{
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#customerValueResult{
+  background: #fff3cd;
+}
+
+#segmentResult{
+  background: #f0f8ff;
+}
+
+#recommendResult{
+  background: #f0fff0;
+}
+
+.result-display h3{
+  margin-bottom: 10px;
+  color: var(--title-color);
 }
 
 /*========== FOOTER ==========*/

@@ -43,16 +43,15 @@
     <main class="l-main">
         <!--========== HOME ==========-->
         <section class="home" id="home">
-            <div class="home__container bd-container bd-grid">
+            <div class="home__container bd-container">
                 <div class="home__data">
                     <h1 class="home__title">ShopSense</h1>
-                    <h2 class="home__subtitle">Quand la data devine vos futurs clients</h2>
-                    <p class="home__description">Découvrez une nouvelle façon d'interpréter les données clients : transformez les chiffres en émotions, et les prédictions en stratégies gagnantes.
-                                        Grâce à l'intelligence des données, notre plateforme anticipe les tendances d'achat et aide les entreprises à comprendre leurs clients comme jamais auparavant.
+                    <h2 class="home__subtitle">Découvrez et comprenez vos clients</h2>
+                    <p class="home__description">Transformez vos données clients en insights utiles. Notre plateforme vous aide à mieux connaître vos acheteurs et à prendre des décisions éclairées pour votre business.
 </p>
+                    <a href="#services" class="button">Explorer les Outils</a>
                 </div>
 
-                <div class="home__3d-container" id="canvas-container"></div>
             </div>
         </section>
         
@@ -61,10 +60,9 @@
             <div class="about__container bd-grid">
                 <div class="about__data">
                     <span class="section-subtitle about__initial">Notre Mission</span>
-                    <h2 class="section-title about__initial">Prédire le comportement client</h2>
-                    <p class="about__description">   Découvrez une nouvelle façon d’interpréter les données clients : transformez les chiffres en émotions, 
-                et les prédictions en stratégies gagnantes. Grâce à notre plateforme, les entreprises peuvent anticiper 
-                les tendances d’achat et comprendre leurs clients comme jamais auparavant.
+                    <h2 class="section-title about__initial">Comprendre le comportement de vos clients</h2>
+                    <p class="about__description">   Découvrez une nouvelle façon d’interpréter les données clients : transformez les chiffres en insights utiles. 
+                Grâce à notre plateforme, les entreprises peuvent mieux connaître leurs acheteurs et prendre des décisions plus intelligentes.
                     </p>
                 </div>
             </div>
@@ -72,38 +70,38 @@
 
      <!--========== SERVICES ==========-->
 <section class="services section bd-container" id="services">
-    <span class="section-subtitle">Nos Solutions</span>
+    <span class="section-subtitle">Nos Outils</span>
     <h2 class="section-title">Choisissez votre analyse</h2>
 
     <div class="services__container bd-grid">
         <!-- 1. Analyse de Valeur -->
         <div class="services__content">
             <i class='bx bx-line-chart services__icon'></i>
-            <h3 class="services__title">Analyse de Valeur Client</h3>
+            <h3 class="services__title">Évaluation des Clients</h3>
             <p class="services__description">
-                Identifiez vos clients les plus fidèles et rentables. Comprenez qui achète le plus, qui revient régulièrement, et qui mérite votre attention particulière.
+                Identifiez vos clients les plus importants. Découvrez qui achète le plus, qui revient souvent, et qui mérite votre attention.
             </p>
-            <button class="button" onclick="showForm('demographic')">Analyser un Client</button>
+            <button class="button" onclick="showForm('demographic')">Évaluer un Client</button>
         </div>
 
         <!-- 2. Segmentation -->
         <div class="services__content">
             <i class='bx bx-user services__icon'></i>
-            <h3 class="services__title">Segmentation</h3>
+            <h3 class="services__title">Groupes de Clients</h3>
             <p class="services__description">
-                Divisez vos clients en groupes homogènes selon leur âge, revenu ou fréquence d'achat pour mieux cibler vos stratégies marketing.
+                Regroupez vos clients selon leur âge, revenu ou habitudes d'achat pour mieux adapter vos offres.
             </p>
-            <button class="button" onclick="showForm('preferences')">Analyser les Segments</button>
+            <button class="button" onclick="showForm('preferences')">Analyser les Groupes</button>
         </div>
 
         <!-- 3. Recommandation -->
         <div class="services__content">
             <i class='bx bx-shopping-bag services__icon'></i>
-            <h3 class="services__title">Recommandation</h3>
+            <h3 class="services__title">Suggestions de Produits</h3>
             <p class="services__description">
-                Offrez à chaque client des produits personnalisés grâce à un système de recommandation intelligent fondé sur leurs préférences et comportements passés.
+                Proposez des produits adaptés à chaque client en fonction de leurs goûts et achats passés.
             </p>
-            <button class="button" onclick="showForm('prediction')">Recommander des Produits</button>
+            <button class="button" onclick="showForm('prediction')">Suggérer des Produits</button>
         </div>
     </div>
 </section>
@@ -111,8 +109,8 @@
 <!--========== CUSTOMER VALUE PREDICTION FORM ==========-->
 <section class="form-section" id="demographic-form">
     <div class="bd-container">
-        <h2 class="section-title">Analyse de Valeur Client</h2>
-        <p class="section-subtitle">Identifiez vos clients à forte valeur grâce à l'analyse prédictive.</p>
+        <h2 class="section-title">Évaluation des Clients</h2>
+        <p class="section-subtitle">Découvrez quels sont vos meilleurs clients en entrant leurs informations.</p>
 
         <div class="form-container">
             <form id="customerValueForm">
@@ -185,7 +183,7 @@
                     </select>
                 </div>
 
-                <div id="customerValueResult" style="display: none; margin-top: 20px; padding: 20px; background: #fff3cd; border-radius: 10px;">
+                <div id="customerValueResult" class="result-display" style="display: none;">
                     <h3>Résultat de l'analyse</h3>
                     <div id="customerValueContent"></div>
                 </div>
@@ -202,8 +200,8 @@
  <!--========== PREFERENCES FORM ==========-->
 <section class="form-section" id="preferences-form">
     <div class="bd-container">
-        <h2 class="section-title">Segmentation des clients</h2>
-        <p class="section-subtitle">Identifiez le profil d’un client selon ses habitudes d’achat et ses préférences.</p>
+        <h2 class="section-title">Analyse des Groupes de Clients</h2>
+        <p class="section-subtitle">Découvrez les produits populaires dans chaque groupe de clients.</p>
 
         <div class="form-container">
             <form id="segmentForm">
@@ -222,7 +220,7 @@
                     <input type="number" name="top_n" id="top_n" value="10" min="1" max="20">
                 </div>
 
-                <div id="segmentResult" style="display: none; margin-top: 20px; padding: 20px; background: #f0f8ff; border-radius: 10px;">
+                <div id="segmentResult" class="result-display" style="display: none;">
                     <h3>Résultats de segmentation</h3>
                     <div id="segmentContent"></div>
                 </div>
@@ -238,8 +236,8 @@
 <!--========== PREDICTION FORM (RECOMMENDATIONS) ==========-->
 <section class="form-section" id="prediction-form">
     <div class="bd-container">
-        <h2 class="section-title">Recommandations personnalisées</h2>
-        <p class="section-subtitle">Obtenez des recommandations de produits basées sur l'historique d'un client.</p>
+        <h2 class="section-title">Suggestions Personnalisées</h2>
+        <p class="section-subtitle">Obtenez des idées de produits adaptés à un client spécifique.</p>
 
         <div class="form-container">
             <form id="recommendForm">
@@ -253,7 +251,7 @@
                     <input type="number" name="top_n_recommend" id="top_n_recommend" value="5" min="1" max="10">
                 </div>
 
-                <div id="recommendResult" style="display: none; margin-top: 20px; padding: 20px; background: #f0fff0; border-radius: 10px;">
+                <div id="recommendResult" class="result-display" style="display: none;">
                     <h3>Recommandations</h3>
                     <div id="recommendContent"></div>
                 </div>
@@ -319,9 +317,6 @@
     <p class="footer__copy">&#169; 2025 DataPredict. Tous droits réservés.</p>
 </footer>
 
-
-    <!--========== THREE.JS ==========-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <!--========== SCROLL REVEAL ==========-->
     <script src="https://unpkg.com/scrollreveal"></script>

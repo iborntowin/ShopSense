@@ -98,7 +98,7 @@ const sr = ScrollReveal({
 });
 
 sr.reveal(
-    `.home__data, .home__3d-container, .about__data, .services__content, .footer__content`,
+    `.home__data, .about__data, .services__content, .footer__content`,
     {
         interval: 200,
     }
@@ -112,10 +112,10 @@ function showForm(formType) {
     const form = document.getElementById(`${formType}-form`);
     if (form) {
         form.classList.add('active');
-        window.scrollTo({
-            top: form.offsetTop - 80,
-            behavior: 'smooth',
-        });
+        const formContainer = form.querySelector('.form-container');
+        if (formContainer) {
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     }
 }
 
@@ -124,56 +124,6 @@ function clearForm(button) {
     const form = button.closest('form');
     form.reset();
 }
-
-/*==================== SIMPLE THREE.JS 3D BACKGROUND ====================*/
-function init3D() {
-    const container = document.getElementById('canvas-container');
-    if (!container) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        container.clientWidth / container.clientHeight,
-        0.1,
-        1000
-    );
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
-
-    const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x2563eb,
-        metalness: 0.7,
-        roughness: 0.3,
-    });
-    const torusKnot = new THREE.Mesh(geometry, material);
-    scene.add(torusKnot);
-
-    const light = new THREE.PointLight(0xffffff, 1);
-    light.position.set(25, 25, 25);
-    scene.add(light);
-
-    camera.position.z = 30;
-
-    function animate() {
-        requestAnimationFrame(animate);
-        torusKnot.rotation.x += 0.01;
-        torusKnot.rotation.y += 0.01;
-        renderer.render(scene, camera);
-    }
-    animate();
-
-    // Adjust canvas on resize
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    });
-}
-
-// Initialize 3D animation after DOM loads
-window.addEventListener('DOMContentLoaded', init3D);
 
 /*==================== HANDLE SEGMENT FORM ====================*/
 document.addEventListener('DOMContentLoaded', function() {
