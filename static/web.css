@@ -13,7 +13,7 @@
   --title-color: #1f2937;
   --text-color: #4b5563;
   --text-color-light: #9ca3af;
-  --body-color: #f8fafc;
+  --body-color: #ffffff;
   --container-color: #ffffff;
   --dark-bg: #0f172a;
   --dark-title: #f1f5f9;
@@ -182,7 +182,7 @@ img{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: #ffffff;
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
@@ -372,7 +372,7 @@ img{
 
 /*========== ABOUT ==========*/
 .about{
-  background-color: #f8fafc;
+  background-color: var(--body-color);
 }
 
 .about__data{
@@ -639,10 +639,10 @@ img{
 .footer__copy{
   text-align: center;
   font-size: var(--small-font-size);
-  color: #94a3b8;
+  color: var(--text-color);
   margin-top: 3.5rem;
   padding-top: var(--mb-3);
-  border-top: 1px solid #475569;
+  border-top: 1px solid var(--text-color-light);
 }
 
 /*========== MEDIA QUERIES ==========*/
