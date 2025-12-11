@@ -123,6 +123,12 @@ function showForm(formType) {
 function clearForm(button) {
     const form = button.closest('form');
     form.reset();
+    
+    // Hide result if exists
+    const resultDiv = form.querySelector('.result-display');
+    if (resultDiv) {
+        resultDiv.style.display = 'none';
+    }
 }
 
 /*==================== HANDLE SEGMENT FORM ====================*/
@@ -132,6 +138,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (customerValueForm) {
         customerValueForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Show loading
+            const submitBtn = customerValueForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Analyse en cours...';
+            submitBtn.disabled = true;
             
             const formData = {
                 age: parseInt(document.getElementById('cv_age').value),
@@ -194,6 +206,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 document.getElementById('customerValueContent').innerHTML = `<p style="color: red;">Erreur: ${error.message}</p>`;
                 document.getElementById('customerValueResult').style.display = 'block';
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
     }

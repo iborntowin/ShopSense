@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!--========== GOOGLE FONTS ==========-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!--========== BOX ICONS ==========-->
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
 
     <!--========== CSS ==========-->
     <link rel="stylesheet" href="{{ url_for('static', filename='web.css') }}">
 
-    <title>ShopSense - Analyse Prédictive Client</title>
+    <title>ShopSense - Intelligence Client pour Startups</title>
 </head>
 <body>
 
@@ -22,7 +27,7 @@
     <!--========== HEADER ==========-->
     <header class="l-header" id="header">
         <nav class="nav bd-container">
-            <a href="#" class="nav__logo">PredictMyCustomer</a>
+            <a href="#" class="nav__logo">ShopSense</a>
 
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">
@@ -46,8 +51,8 @@
             <div class="home__container bd-container">
                 <div class="home__data">
                     <h1 class="home__title">ShopSense</h1>
-                    <h2 class="home__subtitle">Découvrez et comprenez vos clients</h2>
-                    <p class="home__description">Transformez vos données clients en insights utiles. Notre plateforme vous aide à mieux connaître vos acheteurs et à prendre des décisions éclairées pour votre business.
+                    <h2 class="home__subtitle">Intelligence Artificielle pour vos Clients</h2>
+                    <p class="home__description">Transformez vos données clients en décisions stratégiques. Découvrez qui sont vos meilleurs clients, segmentez vos marchés et personnalisez vos recommandations avec notre plateforme IA avancée.
 </p>
                     <a href="#services" class="button">Explorer les Outils</a>
                 </div>
@@ -60,9 +65,8 @@
             <div class="about__container bd-grid">
                 <div class="about__data">
                     <span class="section-subtitle about__initial">Notre Mission</span>
-                    <h2 class="section-title about__initial">Comprendre le comportement de vos clients</h2>
-                    <p class="about__description">   Découvrez une nouvelle façon d’interpréter les données clients : transformez les chiffres en insights utiles. 
-                Grâce à notre plateforme, les entreprises peuvent mieux connaître leurs acheteurs et prendre des décisions plus intelligentes.
+                    <h2 class="section-title about__initial">Révolutionnez Votre Approche Client</h2>
+                    <p class="about__description">Chez ShopSense, nous croyons que chaque donnée client cache une opportunité. Notre plateforme alimentée par l'IA vous permet d'anticiper les comportements, d'optimiser vos stratégies marketing et d'augmenter vos revenus grâce à des insights prédictifs précis.
                     </p>
                 </div>
             </div>
@@ -70,8 +74,8 @@
 
      <!--========== SERVICES ==========-->
 <section class="services section bd-container" id="services">
-    <span class="section-subtitle">Nos Outils</span>
-    <h2 class="section-title">Choisissez votre analyse</h2>
+    <span class="section-subtitle">Nos Solutions IA</span>
+    <h2 class="section-title">Outils d'Analyse Intelligente</h2>
 
     <div class="services__container bd-grid">
         <!-- 1. Analyse de Valeur -->
@@ -79,29 +83,29 @@
             <i class='bx bx-line-chart services__icon'></i>
             <h3 class="services__title">Évaluation des Clients</h3>
             <p class="services__description">
-                Identifiez vos clients les plus importants. Découvrez qui achète le plus, qui revient souvent, et qui mérite votre attention.
+                Identifiez vos clients VIP avec notre modèle prédictif. Analysez le potentiel de valeur basé sur l'historique d'achat, la fréquence et les comportements.
             </p>
             <button class="button" onclick="showForm('demographic')">Évaluer un Client</button>
         </div>
 
         <!-- 2. Segmentation -->
         <div class="services__content">
-            <i class='bx bx-user services__icon'></i>
-            <h3 class="services__title">Groupes de Clients</h3>
+            <i class='bx bx-group services__icon'></i>
+            <h3 class="services__title">Segmentation Avancée</h3>
             <p class="services__description">
-                Regroupez vos clients selon leur âge, revenu ou habitudes d'achat pour mieux adapter vos offres.
+                Segmentez automatiquement vos clients en clusters homogènes. Découvrez les produits populaires par groupe pour des campagnes ciblées.
             </p>
-            <button class="button" onclick="showForm('preferences')">Analyser les Groupes</button>
+            <button class="button" onclick="showForm('preferences')">Analyser les Segments</button>
         </div>
 
         <!-- 3. Recommandation -->
         <div class="services__content">
-            <i class='bx bx-shopping-bag services__icon'></i>
-            <h3 class="services__title">Suggestions de Produits</h3>
+            <i class='bx bx-target-lock services__icon'></i>
+            <h3 class="services__title">Recommandations IA</h3>
             <p class="services__description">
-                Proposez des produits adaptés à chaque client en fonction de leurs goûts et achats passés.
+                Offrez des suggestions personnalisées à chaque client. Notre système hybride combine similarité, segments et historique pour des recommandations précises.
             </p>
-            <button class="button" onclick="showForm('prediction')">Suggérer des Produits</button>
+            <button class="button" onclick="showForm('prediction')">Générer des Recommandations</button>
         </div>
     </div>
 </section>
@@ -270,51 +274,50 @@
     <div class="footer__container bd-grid">
         <!-- Logo et description -->
         <div class="footer__content">
-            <a href="#" class="footer__logo">DataPredict</a>
-            <span class="footer__description">Solutions d'Analyse Prédictive</span>
+            <a href="#" class="footer__logo">ShopSense</a>
+            <span class="footer__description">Intelligence Artificielle pour le Commerce</span>
+            <p>Transformez vos données en avantage concurrentiel avec nos outils d'analyse prédictive.</p>
             <div class="footer__socials">
-                <a href="#" class="footer__social"><i class='bx bxl-facebook'></i></a>
-                <a href="#" class="footer__social"><i class='bx bxl-instagram'></i></a>
-                <a href="#" class="footer__social"><i class='bx bxl-twitter'></i></a>
                 <a href="#" class="footer__social"><i class='bx bxl-linkedin'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-twitter'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-github'></i></a>
             </div>
         </div>
 
         <!-- Services -->
         <div class="footer__content">
-            <h3 class="footer__title">Services</h3>
+            <h3 class="footer__title">Solutions</h3>
             <ul>
-                <li><a href="#" class="footer__link">Analyse Démographique</a></li>
-                <li><a href="#" class="footer__link">Segmentation Clients</a></li>
-                <li><a href="#" class="footer__link">Prédiction des Achats</a></li>
-                <li><a href="#" class="footer__link">Rapports Personnalisés</a></li>
+                <li><a href="#services" class="footer__link">Évaluation Client</a></li>
+                <li><a href="#services" class="footer__link">Segmentation IA</a></li>
+                <li><a href="#services" class="footer__link">Recommandations</a></li>
+                <li><a href="#" class="footer__link">API Integration</a></li>
             </ul>
         </div>
 
-        <!-- Information -->
+        <!-- Entreprise -->
         <div class="footer__content">
-            <h3 class="footer__title">Informations</h3>
+            <h3 class="footer__title">Entreprise</h3>
             <ul>
-                <li><a href="#" class="footer__link">À propos de nous</a></li>
+                <li><a href="#about" class="footer__link">À propos</a></li>
+                <li><a href="#" class="footer__link">Carrières</a></li>
+                <li><a href="#" class="footer__link">Blog</a></li>
                 <li><a href="#" class="footer__link">Contact</a></li>
-                <li><a href="#" class="footer__link">Politique de confidentialité</a></li>
-                <li><a href="#" class="footer__link">Conditions d'utilisation</a></li>
             </ul>
         </div>
 
-        <!-- Contact -->
+        <!-- Newsletter -->
         <div class="footer__content">
-            <h3 class="footer__title">Contact</h3>
-            <ul>
-                <li>Tunis</li>
-                <li>Data Analytics Team</li>
-                <li>+216  23 456 789</li>
-                <li><a href="mailto:contact@datapredict.com" class="footer__link">contact@datapredict.com</a></li>
-            </ul>
+            <h3 class="footer__title">Restez Informé</h3>
+            <p>Abonnez-vous à notre newsletter pour les dernières innovations IA.</p>
+            <div class="newsletter">
+                <input type="email" placeholder="Votre email" class="newsletter__input">
+                <button class="newsletter__button">S'abonner</button>
+            </div>
         </div>
     </div>
 
-    <p class="footer__copy">&#169; 2025 DataPredict. Tous droits réservés.</p>
+    <p class="footer__copy">&#169; 2025 ShopSense. Propulsé par l'IA pour l'avenir du commerce.</p>
 </footer>
 
 
