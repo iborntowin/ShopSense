@@ -83,7 +83,7 @@
             <p class="services__description">
                 Identifiez vos clients les plus fidèles et rentables. Comprenez qui achète le plus, qui revient régulièrement, et qui mérite votre attention particulière.
             </p>
-            <a href="/predict-form" class="button" style="text-decoration: none;">Analyser un Client</a>
+            <button class="button" onclick="showForm('demographic')">Analyser un Client</button>
         </div>
 
         <!-- 2. Segmentation -->
@@ -108,49 +108,90 @@
     </div>
 </section>
 
-<!--========== DEMOGRAPHIC FORM ==========-->
+<!--========== CUSTOMER VALUE PREDICTION FORM ==========-->
 <section class="form-section" id="demographic-form">
     <div class="bd-container">
-        <h2 class="section-title">Formulaire de prédiction</h2>
-        <p class="section-subtitle">Saisissez les informations du client pour analyser et prédire son comportement d’achat.</p>
+        <h2 class="section-title">Analyse de Valeur Client</h2>
+        <p class="section-subtitle">Identifiez vos clients à forte valeur grâce à l'analyse prédictive.</p>
 
         <div class="form-container">
-            <form>
+            <form id="customerValueForm">
                 <div class="form-group">
-                    <label>Tranche d'âge du client</label>
-                    <select>
-                        <option>18-25 ans</option>
-                        <option>26-35 ans</option>
-                        <option>36-45 ans</option>
-                        <option>46-60 ans</option>
-                        <option>60+ ans</option>
+                    <label>Age</label>
+                    <input type="number" name="age" id="cv_age" value="35" min="18" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Annual Income ($)</label>
+                    <input type="number" name="income" id="cv_income" value="60000" min="0" step="1000" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" id="cv_gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Genre</label>
-                    <select>
-                        <option>Homme</option>
-                        <option>Femme</option>
+                    <label>Category</label>
+                    <select name="category" id="cv_category" required>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Footwear">Footwear</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Outerwear">Outerwear</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Revenu mensuel estimé (USD)</label>
-                    <input type="number" placeholder="Ex: 2500">
+                    <label>Previous Purchases</label>
+                    <input type="number" name="previous_purchases" id="cv_previous_purchases" value="10" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label>Localisation du client</label>
-                    <input type="text" placeholder="Ville ou région">
+                    <label>Review Rating (1-5)</label>
+                    <input type="number" name="review_rating" id="cv_review_rating" value="4.0" min="1" max="5" step="0.1" required>
                 </div>
                 <div class="form-group">
-                    <label>Fréquence moyenne d’achat</label>
-                    <select>
-                        <option>Faible</option>
-                        <option>Moyenne</option>
-                        <option>Élevée</option>
+                    <label>Web Visits/Month</label>
+                    <input type="number" name="num_web_visits" id="cv_num_web_visits" value="5" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Subscription</label>
+                    <select name="subscription" id="cv_subscription" required>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Shipping</label>
+                    <select name="shipping" id="cv_shipping" required>
+                        <option value="Standard">Standard</option>
+                        <option value="Express">Express</option>
+                        <option value="Free Shipping">Free Shipping</option>
+                        <option value="Next Day Air">Next Day Air</option>
+                        <option value="2-Day Shipping">2-Day Shipping</option>
+                        <option value="Store Pickup">Store Pickup</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Discount</label>
+                    <select name="discount" id="cv_discount" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Promo Code</label>
+                    <select name="promo" id="cv_promo" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+                <div id="customerValueResult" style="display: none; margin-top: 20px; padding: 20px; background: #fff3cd; border-radius: 10px;">
+                    <h3>Résultat de l'analyse</h3>
+                    <div id="customerValueContent"></div>
+                </div>
+
                 <div class="form-buttons">
-                    <button type="submit" class="button">Analyser le profil</button>
+                    <button type="submit" class="button">Analyser le client</button>
                     <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
                 </div>
             </form>

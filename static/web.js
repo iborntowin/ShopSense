@@ -177,6 +177,78 @@ window.addEventListener('DOMContentLoaded', init3D);
 
 /*==================== HANDLE SEGMENT FORM ====================*/
 document.addEventListener('DOMContentLoaded', function() {
+    // Customer Value Form Handler
+    const customerValueForm = document.getElementById('customerValueForm');
+    if (customerValueForm) {
+        customerValueForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                age: parseInt(document.getElementById('cv_age').value),
+                income: parseFloat(document.getElementById('cv_income').value),
+                gender: document.getElementById('cv_gender').value,
+                category: document.getElementById('cv_category').value,
+                previous_purchases: parseInt(document.getElementById('cv_previous_purchases').value),
+                review_rating: parseFloat(document.getElementById('cv_review_rating').value),
+                num_web_visits: parseInt(document.getElementById('cv_num_web_visits').value),
+                subscription: document.getElementById('cv_subscription').value,
+                shipping: document.getElementById('cv_shipping').value,
+                discount: document.getElementById('cv_discount').value,
+                promo: document.getElementById('cv_promo').value
+            };
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    document.getElementById('customerValueContent').innerHTML = `<p style="color: red;">Erreur: ${result.error}</p>`;
+                    document.getElementById('customerValueResult').style.background = '#ffebee';
+                } else {
+                    // Set background color based on result
+                    let backgroundColor = result.color === 'success' ? '#d4edda' : 
+                                         result.color === 'warning' ? '#fff3cd' : '#f8d7da';
+                    let textColor = result.color === 'success' ? '#155724' : 
+                                   result.color === 'warning' ? '#856404' : '#721c24';
+                    let badgeColor = result.color === 'success' ? '#28a745' : 
+                                    result.color === 'warning' ? '#ffc107' : '#dc3545';
+                    
+                    document.getElementById('customerValueResult').style.background = backgroundColor;
+                    document.getElementById('customerValueResult').style.color = textColor;
+                    
+                    let html = `
+                        <div style="text-align: center; margin: 20px 0;">
+                            <span style="font-size: 1.5em; padding: 10px 20px; background: ${badgeColor}; color: white; border-radius: 5px; display: inline-block;">${result.segment}</span>
+                        </div>
+                        <p><strong>Probabilité de haute valeur:</strong> ${result.probability_display}</p>
+                        <h4 style="margin-top: 20px;">${result.recommendation.title}</h4>
+                        <ul style="text-align: left; margin-top: 10px;">
+                    `;
+                    
+                    result.recommendation.actions.forEach(action => {
+                        html += `<li style="margin: 8px 0;">${action}</li>`;
+                    });
+                    
+                    html += '</ul>';
+                    
+                    document.getElementById('customerValueContent').innerHTML = html;
+                }
+                document.getElementById('customerValueResult').style.display = 'block';
+            } catch (error) {
+                document.getElementById('customerValueContent').innerHTML = `<p style="color: red;">Erreur: ${error.message}</p>`;
+                document.getElementById('customerValueResult').style.display = 'block';
+            }
+        });
+    }
+    
+    // Segment Form Handler
     const segmentForm = document.getElementById('segmentForm');
     if (segmentForm) {
         segmentForm.addEventListener('submit', async function(e) {
