@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>ShopIntelligence - Intelligence Client pour Startups</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -607,11 +608,51 @@
                 </button>
             </div>
             <div class="nav__toggle" id="navToggle">
+=======
+
+    <!--========== GOOGLE FONTS ==========-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!--========== BOX ICONS ==========-->
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+    <!--========== CSS ==========-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='web.css') }}">
+
+    <title>ShopSense - Intelligence Client pour Startups</title>
+</head>
+<body>
+
+    <!--========== SCROLL TOP ==========-->
+    <a href="#" class="scrolltop" id="scroll-top">
+        <i class='bx bx-chevron-up scrolltop__icon'></i>
+    </a>
+
+    <!--========== HEADER ==========-->
+    <header class="l-header" id="header">
+        <nav class="nav bd-container">
+            <a href="#" class="nav__logo">ShopSense</a>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#home" class="nav__link active-link">Accueil</a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link">À propos</a></li>
+                    <li class="nav__item"><a href="#services" class="nav__link">Services</a></li>
+
+                    <li><i class='bx bx-moon change-theme' id="theme-button"></i></li>
+                </ul>
+            </div>
+
+            <div class="nav__toggle" id="nav-toggle">
+>>>>>>> 9cf5ecbc3f7c3ef8872c330577ce2ec531006a75
                 <i class='bx bx-menu'></i>
             </div>
         </nav>
     </header>
 
+<<<<<<< HEAD
     <!-- HERO -->
     <section class="hero" id="home">
         <div class="hero__container">
@@ -732,10 +773,155 @@
                         </select>
                     </div>
                 </div>
+=======
+    <main class="l-main">
+        <!--========== HOME ==========-->
+        <section class="home" id="home">
+            <div class="home__container bd-container">
+                <div class="home__data">
+                    <h1 class="home__title">ShopSense</h1>
+                    <h2 class="home__subtitle">Intelligence Artificielle pour vos Clients</h2>
+                    <p class="home__description">Transformez vos données clients en décisions stratégiques. Découvrez qui sont vos meilleurs clients, segmentez vos marchés et personnalisez vos recommandations avec notre plateforme IA avancée.
+</p>
+                    <a href="#services" class="button">Explorer les Outils</a>
+                </div>
+
+            </div>
+        </section>
+        
+        <!--========== ABOUT ==========-->
+        <section class="about section bd-container" id="about">
+            <div class="about__container bd-grid">
+                <div class="about__data">
+                    <span class="section-subtitle about__initial">Notre Mission</span>
+                    <h2 class="section-title about__initial">Révolutionnez Votre Approche Client</h2>
+                    <p class="about__description">Chez ShopSense, nous croyons que chaque donnée client cache une opportunité. Notre plateforme alimentée par l'IA vous permet d'anticiper les comportements, d'optimiser vos stratégies marketing et d'augmenter vos revenus grâce à des insights prédictifs précis.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+     <!--========== SERVICES ==========-->
+<section class="services section bd-container" id="services">
+    <span class="section-subtitle">Nos Solutions IA</span>
+    <h2 class="section-title">Outils d'Analyse Intelligente</h2>
+
+    <div class="services__container bd-grid">
+        <!-- 1. Analyse de Valeur -->
+        <div class="services__content">
+            <i class='bx bx-line-chart services__icon'></i>
+            <h3 class="services__title">Évaluation des Clients</h3>
+            <p class="services__description">
+                Identifiez vos clients VIP avec notre modèle prédictif. Analysez le potentiel de valeur basé sur l'historique d'achat, la fréquence et les comportements.
+            </p>
+            <button class="button" onclick="showForm('demographic')">Évaluer un Client</button>
+        </div>
+
+        <!-- 2. Segmentation -->
+        <div class="services__content">
+            <i class='bx bx-group services__icon'></i>
+            <h3 class="services__title">Segmentation Avancée</h3>
+            <p class="services__description">
+                Segmentez automatiquement vos clients en clusters homogènes. Découvrez les produits populaires par groupe pour des campagnes ciblées.
+            </p>
+            <button class="button" onclick="showForm('preferences')">Analyser les Segments</button>
+        </div>
+
+        <!-- 3. Recommandation -->
+        <div class="services__content">
+            <i class='bx bx-target-lock services__icon'></i>
+            <h3 class="services__title">Recommandations IA</h3>
+            <p class="services__description">
+                Offrez des suggestions personnalisées à chaque client. Notre système hybride combine similarité, segments et historique pour des recommandations précises.
+            </p>
+            <button class="button" onclick="showForm('prediction')">Générer des Recommandations</button>
+        </div>
+    </div>
+</section>
+
+<!--========== CUSTOMER VALUE PREDICTION FORM ==========-->
+<section class="form-section" id="demographic-form">
+    <div class="bd-container">
+        <h2 class="section-title">Évaluation des Clients</h2>
+        <p class="section-subtitle">Découvrez quels sont vos meilleurs clients en entrant leurs informations.</p>
+
+        <div class="form-container">
+            <form id="customerValueForm">
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="age" id="cv_age" value="35" min="18" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Annual Income ($)</label>
+                    <input type="number" name="income" id="cv_income" value="60000" min="0" step="1000" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" id="cv_gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" id="cv_category" required>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Footwear">Footwear</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Outerwear">Outerwear</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Previous Purchases</label>
+                    <input type="number" name="previous_purchases" id="cv_previous_purchases" value="10" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Review Rating (1-5)</label>
+                    <input type="number" name="review_rating" id="cv_review_rating" value="4.0" min="1" max="5" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label>Web Visits/Month</label>
+                    <input type="number" name="num_web_visits" id="cv_num_web_visits" value="5" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Subscription</label>
+                    <select name="subscription" id="cv_subscription" required>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Shipping</label>
+                    <select name="shipping" id="cv_shipping" required>
+                        <option value="Standard">Standard</option>
+                        <option value="Express">Express</option>
+                        <option value="Free Shipping">Free Shipping</option>
+                        <option value="Next Day Air">Next Day Air</option>
+                        <option value="2-Day Shipping">2-Day Shipping</option>
+                        <option value="Store Pickup">Store Pickup</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Discount</label>
+                    <select name="discount" id="cv_discount" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Promo Code</label>
+                    <select name="promo" id="cv_promo" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+>>>>>>> 9cf5ecbc3f7c3ef8872c330577ce2ec531006a75
                 <div id="customerValueResult" class="result-display" style="display: none;">
                     <h3>Résultat de l'analyse</h3>
                     <div id="customerValueContent"></div>
                 </div>
+<<<<<<< HEAD
                 <div class="form-actions">
                     <button type="submit" class="btn-service">Analyser</button>
                     <button type="button" class="btn-service" onclick="clearForm(this)" style="background: #94a3b8;">Effacer</button>
@@ -793,10 +979,77 @@
                         <input type="number" name="top_n_recommend" value="5" min="1" max="10">
                     </div>
                 </div>
+=======
+
+                <div class="form-buttons">
+                    <button type="submit" class="button">Analyser le client</button>
+                    <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+ <!--========== PREFERENCES FORM ==========-->
+<section class="form-section" id="preferences-form">
+    <div class="bd-container">
+        <h2 class="section-title">Analyse des Groupes de Clients</h2>
+        <p class="section-subtitle">Découvrez les produits populaires dans chaque groupe de clients.</p>
+
+        <div class="form-container">
+            <form id="segmentForm">
+                <div class="form-group">
+                    <label>Segment ID (0-3)</label>
+                    <select name="segment_id" id="segment_id" required>
+                        <option value="0">Segment 0</option>
+                        <option value="1">Segment 1</option>
+                        <option value="2">Segment 2</option>
+                        <option value="3">Segment 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre de produits à afficher</label>
+                    <input type="number" name="top_n" id="top_n" value="10" min="1" max="20">
+                </div>
+
+                <div id="segmentResult" class="result-display" style="display: none;">
+                    <h3>Résultats de segmentation</h3>
+                    <div id="segmentContent"></div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="button">Analyser le segment</button>
+                    <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!--========== PREDICTION FORM (RECOMMENDATIONS) ==========-->
+<section class="form-section" id="prediction-form">
+    <div class="bd-container">
+        <h2 class="section-title">Suggestions Personnalisées</h2>
+        <p class="section-subtitle">Obtenez des idées de produits adaptés à un client spécifique.</p>
+
+        <div class="form-container">
+            <form id="recommendForm">
+                <div class="form-group">
+                    <label>ID Client (1-3900)</label>
+                    <input type="number" name="customer_id" id="customer_id" placeholder="Ex: 100" value="100" min="1" max="3900" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre de recommandations</label>
+                    <input type="number" name="top_n_recommend" id="top_n_recommend" value="5" min="1" max="10">
+                </div>
+
+>>>>>>> 9cf5ecbc3f7c3ef8872c330577ce2ec531006a75
                 <div id="recommendResult" class="result-display" style="display: none;">
                     <h3>Recommandations</h3>
                     <div id="recommendContent"></div>
                 </div>
+<<<<<<< HEAD
                 <div class="form-actions">
                     <button type="submit" class="btn-service">Générer</button>
                     <button type="button" class="btn-service" onclick="clearForm(this)" style="background: #94a3b8;">Effacer</button>
@@ -964,3 +1217,85 @@
     </script>
 </body>
 </html>
+=======
+
+                <div class="form-buttons">
+                    <button type="submit" class="button">Générer la recommandation</button>
+                    <button type="button" class="button button-secondary" onclick="clearForm(this)">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!--========== FOOTER ==========-->
+<footer class="footer section bd-container">
+    <div class="footer__container bd-grid">
+        <!-- Logo et description -->
+        <div class="footer__content">
+            <a href="#" class="footer__logo">ShopSense</a>
+            <span class="footer__description">Intelligence Artificielle pour le Commerce</span>
+            <p>Transformez vos données en avantage concurrentiel avec nos outils d'analyse prédictive.</p>
+            <div class="footer__socials">
+                <a href="#" class="footer__social"><i class='bx bxl-linkedin'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-twitter'></i></a>
+                <a href="#" class="footer__social"><i class='bx bxl-github'></i></a>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="footer__content">
+            <h3 class="footer__title">Solutions</h3>
+            <ul>
+                <li><a href="#services" class="footer__link">Évaluation Client</a></li>
+                <li><a href="#services" class="footer__link">Segmentation IA</a></li>
+                <li><a href="#services" class="footer__link">Recommandations</a></li>
+                <li><a href="#" class="footer__link">API Integration</a></li>
+            </ul>
+        </div>
+
+        <!-- Entreprise -->
+        <div class="footer__content">
+            <h3 class="footer__title">Entreprise</h3>
+            <ul>
+                <li><a href="#about" class="footer__link">À propos</a></li>
+                <li><a href="#" class="footer__link">Carrières</a></li>
+                <li><a href="#" class="footer__link">Blog</a></li>
+                <li><a href="#" class="footer__link">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer__content">
+            <h3 class="footer__title">Restez Informé</h3>
+            <p>Abonnez-vous à notre newsletter pour les dernières innovations IA.</p>
+            <div class="newsletter">
+                <input type="email" placeholder="Votre email" class="newsletter__input">
+                <button class="newsletter__button">S'abonner</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="footer__copy">&#169; 2025 ShopSense. Propulsé par l'IA pour l'avenir du commerce.</p>
+</footer>
+
+
+    <!--========== SCROLL REVEAL ==========-->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!--========== MAIN JS ==========-->
+    <script src="{{ url_for('static', filename='web.js') }}"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 9cf5ecbc3f7c3ef8872c330577ce2ec531006a75
