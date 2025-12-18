@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopIntelligence - Intelligence Client pour Startups</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary: #d4a5a5;
+            --primary-dark: #c28f8f;
+            --secondary: #f1e6e3;
+            --accent: #b8857d;
+            --dark: #5a4a47;
+            --light: #f1e6e3;
+            --text: #5a4a47;
+            --text-light: #8b7875;
+            --border: #e8d5d1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+        }
+
+        .nav__logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #5a4a47;
+        }
+
+        .nav__menu {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav__link {
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav__link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav__link:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: #f1e6e3;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero__content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: #5a4a47;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero__content h2 {
+            font-size: 1.5rem;
+            color: #5a4a47;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero__content p {
+            color: #5a4a47;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero__visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(90, 74, 71, 0.4);
+            animation: floatShadow 6s ease-in-out infinite;
+        }
+
+        @keyframes floatShadow {
+            0%, 100% { 
+                transform: translateY(0px);
+                box-shadow: 0 30px 80px rgba(90, 74, 71, 0.4);
+            }
+            50% { 
+                transform: translateY(-25px);
+                box-shadow: 0 50px 120px rgba(90, 74, 71, 0.5);
+            }
+        }
+
+        .floating-card {
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #5a4a47;
+            color: #f1e6e3;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(90, 74, 71, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(90, 74, 71, 0.4);
+            background: #4a3a37;
+        }
+
+        /* ABOUT SECTION */
+        .about {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 1rem 0;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* SERVICES */
+        .services {
+            background: var(--light);
+            padding: 6rem 2rem;
+        }
+
+        .services__container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #d4a5a5;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .service-description {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .btn-service {
+            padding: 0.8rem 2rem;
+            background: #d4a5a5;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-service:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(212, 165, 165, 0.4);
+            background: #c28f8f;
+        }
+
+        /* FORMS */
+        .form-section {
+            display: none;
+            padding: 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .result-display {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--light);
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer__logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #f1e6e3;
+        }
+
+        .footer__description {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 1rem 0;
+            line-height: 1.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer__title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer__links {
+            list-style: none;
+        }
+
+        .footer__links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer__links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer__links a:hover {
+            color: var(--primary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .newsletter-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .footer__copy {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* MOBILE NAV */
+        .nav__toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav__menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s;
+            }
+
+            .nav__menu.active {
+                left: 0;
+            }
+
+            .nav__toggle {
+                display: block;
+            }
+
+            .hero__container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero__content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero__visual {
+                display: block;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .services__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- SCROLL TOP -->
+    <div class="scroll-top" id="scrollTop">
+        <i class='bx bx-chevron-up'></i>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <nav class="nav">
+            <a href="#" class="nav__logo">ShopIntelligence</a>
+            <div class="nav__menu" id="navMenu">
+                <a href="#home" class="nav__link">Accueil</a>
+                <a href="#about" class="nav__link">À propos</a>
+                <a href="#services" class="nav__link">Services</a>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class='bx bx-moon'></i>
+                </button>
+            </div>
+            <div class="nav__toggle" id="navToggle">
+                <i class='bx bx-menu'></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero__container">
+            <div class="hero__content">
+                <h1>ShopIntelligence</h1>
+                <h2>Intelligence Artificielle pour vos Clients</h2>
+                <p>Transformez vos données clients en décisions stratégiques. Découvrez qui sont vos meilleurs clients, segmentez vos marchés et personnalisez vos recommandations avec notre plateforme IA avancée.</p>
+                <a href="#services" class="btn">Explorer les Outils</a>
+            </div>
+            <div class="hero__visual">
+                <img src="aa.jpg" alt="Shopping Experience" class="hero__image">
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="section-header">
+            <div class="section-tag">Notre Mission</div>
+            <h2 class="section-title">Révolutionnez Votre Approche Client</h2>
+            <p class="section-description">Chez ShopIntelligence, nous croyons que chaque donnée client cache une opportunité. Notre plateforme alimentée par l'IA vous permet d'anticiper les comportements, d'optimiser vos stratégies marketing et d'augmenter vos revenus grâce à des insights prédictifs précis.</p>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <div class="services__container">
+            <div class="section-header">
+                <div class="section-tag">Nos Solutions IA</div>
+                <h2 class="section-title">Outils d'Analyse Intelligente</h2>
+            </div>
+            <div class="services__grid">
+                <div class="service-card">
+                    <i class='bx bx-line-chart service-icon'></i>
+                    <h3 class="service-title">Évaluation des Clients</h3>
+                    <p class="service-description">Identifiez vos clients VIP avec notre modèle prédictif. Analysez le potentiel de valeur basé sur l'historique d'achat, la fréquence et les comportements.</p>
+                    <button class="btn-service" onclick="showForm('demographic')">Évaluer un Client</button>
+                </div>
+                <div class="service-card">
+                    <i class='bx bx-group service-icon'></i>
+                    <h3 class="service-title">Segmentation Avancée</h3>
+                    <p class="service-description">Segmentez automatiquement vos clients en clusters homogènes. Découvrez les produits populaires par groupe pour des campagnes ciblées.</p>
+                    <button class="btn-service" onclick="showForm('preferences')">Analyser les Segments</button>
+                </div>
+                <div class="service-card">
+                    <i class='bx bx-target-lock service-icon'></i>
+                    <h3 class="service-title">Recommandations IA</h3>
+                    <p class="service-description">Offrez des suggestions personnalisées à chaque client. Notre système hybride combine similarité, segments et historique pour des recommandations précises.</p>
+                    <button class="btn-service" onclick="showForm('prediction')">Générer des Recommandations</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORM: ÉVALUATION CLIENT -->
+    <section class="form-section" id="demographic-form">
+        <div class="form-container">
+            <h2 class="section-title">Évaluation des Clients</h2>
+            <p class="section-description">Découvrez quels sont vos meilleurs clients en entrant leurs informations.</p>
+            <form id="customerValueForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" name="age" value="35" min="18" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Revenu Annuel ($)</label>
+                        <input type="number" name="income" value="60000" min="0" step="1000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <select name="gender" required>
+                            <option value="Male">Homme</option>
+                            <option value="Female">Femme</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select name="category" required>
+                            <option value="Clothing">Vêtements</option>
+                            <option value="Footwear">Chaussures</option>
+                            <option value="Accessories">Accessoires</option>
+                            <option value="Outerwear">Manteaux</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Achats Précédents</label>
+                        <input type="number" name="previous_purchases" value="10" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Note (1-5)</label>
+                        <input type="number" name="review_rating" value="4.0" min="1" max="5" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Visites Web/Mois</label>
+                        <input type="number" name="num_web_visits" value="5" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Abonnement</label>
+                        <select name="subscription" required>
+                            <option value="Yes">Oui</option>
+                            <option value="No">Non</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Livraison</label>
+                        <select name="shipping" required>
+                            <option value="Standard">Standard</option>
+                            <option value="Express">Express</option>
+                            <option value="Free Shipping">Gratuit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Réduction</label>
+                        <select name="discount" required>
+                            <option value="No">Non</option>
+                            <option value="Yes">Oui</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="customerValueResult" class="result-display" style="display: none;">
+                    <h3>Résultat de l'analyse</h3>
+                    <div id="customerValueContent"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-service">Analyser</button>
+                    <button type="button" class="btn-service" onclick="clearForm(this)" style="background: #94a3b8;">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- FORM: SEGMENTATION -->
+    <section class="form-section" id="preferences-form">
+    <div class="bd-container">
+        <h2 class="section-title">Segmentation des clients</h2>
+        <p class="section-subtitle">Identifiez le profil d’un client selon ses habitudes d’achat et ses préférences.</p>
+
+        <div class="form-container">
+            <form id="segmentForm">
+                <input type="hidden" name="form_type" value="segmentation">
+
+                <div class="form-group">
+                    <label>Income ($)</label>
+                    <input type="number" name="Income" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="Age" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Vetement</label>
+                    <input type="number" name="Wines" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Chaussures</label>
+                    <input type="number" name="Fruits" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Accessoires</label>
+                    <input type="number" name="Meat" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>sac</label>
+                    <input type="number" name="Fish" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>gilet</label>
+                    <input type="number" name="Sweet" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>maillot</label>
+                    <input type="number" name="Gold" min="0" required>
+                </div>
+
+                <!-- Result container (populated by JavaScript) -->
+                <div id="segmentResult" style="display: none; margin-top:20px; padding:15px; background:#f0f8ff; border-radius:10px;"></div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="button">Analyser le client</button>
+                    <button type="reset" class="button button-secondary">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+    <!-- FORM: RECOMMANDATIONS -->
+    <section class="form-section" id="prediction-form">
+        <div class="form-container">
+            <h2 class="section-title">Recommandations Personnalisées</h2>
+            <p class="section-description">Obtenez des suggestions de produits adaptées.</p>
+            <form id="recommendForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>ID Client (1-3900)</label>
+                        <input type="number" name="customer_id" value="100" min="1" max="3900" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre de recommandations</label>
+                        <input type="number" name="top_n_recommend" value="5" min="1" max="10">
+                    </div>
+                </div>
+                <div id="recommendResult" class="result-display" style="display: none;">
+                    <h3>Recommandations</h3>
+                    <div id="recommendContent"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-service">Générer</button>
+                    <button type="button" class="btn-service" onclick="clearForm(this)" style="background: #94a3b8;">Effacer</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer__container">
+            <div>
+                <div class="footer__logo">ShopIntelligence</div>
+                <p class="footer__description">Transformez vos données en avantage concurrentiel avec nos outils d'analyse prédictive.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class='bx bxl-linkedin'></i></a>
+                    <a href="#" class="social-link"><i class='bx bxl-twitter'></i></a>
+                    <a href="#" class="social-link"><i class='bx bxl-github'></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="footer__title">Solutions</h3>
+                <ul class="footer__links">
+                    <li><a href="#services">Évaluation Client</a></li>
+                    <li><a href="#services">Segmentation IA</a></li>
+                    <li><a href="#services">Recommandations</a></li>
+                    <li><a href="#">API Integration</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer__title">Entreprise</h3>
+                <ul class="footer__links">
+                    <li><a href="#about">À propos</a></li>
+                    <li><a href="#">Carrières</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer__title">Restez Informé</h3>
+                <p class="footer__description">Abonnez-vous à notre newsletter.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Votre email" class="newsletter-input">
+                    <button type="submit" class="newsletter-btn">OK</button>
+                </form>
+            </div>
+        </div>
+        <p class="footer__copy">© 2025 ShopIntelligence. Propulsé par l'IA pour l'avenir du commerce.</p>
+    </footer>
+
+    <script>
+        // Navigation mobile
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Scroll reveal
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.scrollY > 300) {
+                scrollTop.classList.add('show');
+            } else {
+                scrollTop.classList.remove('show');
+            }
+        });
+
+        document.getElementById('scrollTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Afficher les formulaires
+        function showForm(formType) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            const formMap = {
+                'demographic': 'demographic-form',
+                'preferences': 'preferences-form',
+                'prediction': 'prediction-form'
+            };
+            
+            const targetForm = document.getElementById(formMap[formType]);
+            if (targetForm) {
+                targetForm.classList.add('active');
+                targetForm.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Effacer formulaire
+        function clearForm(button) {
+            const form = button.closest('form');
+            form.reset();
+            const resultDiv = form.querySelector('.result-display');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+        }
+
+        // Soumettre le formulaire d'évaluation client
+        document.getElementById('customerValueForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const resultDiv = document.getElementById('customerValueResult');
+            const contentDiv = document.getElementById('customerValueContent');
+            
+            // Simulation de résultat
+            contentDiv.innerHTML = `
+                <p><strong>Score de valeur:</strong> 87/100</p>
+                <p><strong>Catégorie:</strong> Client Premium</p>
+                <p><strong>Recommandation:</strong> Offrir des avantages VIP et promotions exclusives</p>
+            `;
+            resultDiv.style.display = 'block';
+        });
+
+        // Soumettre le formulaire de segmentation
+        document.getElementById('segmentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const resultDiv = document.getElementById('segmentResult');
+            const formData = new FormData(document.getElementById('segmentForm'));
+            
+            // Get form values to determine cluster
+            const income = parseFloat(formData.get('Income')) || 0;
+            const wines = parseFloat(formData.get('Wines')) || 0;
+            const fruits = parseFloat(formData.get('Fruits')) || 0;
+            const meat = parseFloat(formData.get('Meat')) || 0;
+            
+            // Calculate total spending
+            const totalSpending = wines + fruits + meat;
+            
+            // Determine cluster based on spending levels
+            let cluster, segment, confidence;
+            
+            if (income > 60000 && totalSpending > 1000) {
+                cluster = 0;
+                segment = "High spenders on luxury items";
+                confidence = 94.2;
+            } else if (income > 30000 && income <= 60000 && totalSpending > 500) {
+                cluster = 1;
+                segment = "Moderate spenders, balanced diet";
+                confidence = 87.6;
+            } else {
+                cluster = 2;
+                segment = "Low spenders, cautious buyers";
+                confidence = 91.3;
+            }
+            
+            // Display results
+            const html = `
+                <h3 style="color: #5a4a47; margin-bottom: 1rem;">Résultat de la segmentation</h3>
+                <p><strong>Segment:</strong> ${segment}</p>
+                <p><strong>Score de confiance:</strong> ${confidence}%</p>
+                <p><strong>Profil client:</strong> Cluster ${cluster}</p>
+            `;
+            
+            resultDiv.innerHTML = html;
+            resultDiv.style.display = 'block';
+        });
+
+        // Soumettre le formulaire de recommandations
+        document.getElementById('recommendForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const resultDiv = document.getElementById('recommendResult');
+            const contentDiv = document.getElementById('recommendContent');
+            
+            contentDiv.innerHTML = `
+                <p><strong>Recommandations personnalisées:</strong></p>
+                <ul style="text-align: left; margin-top: 1rem;">
+                    <li>Veste en cuir premium</li>
+                    <li>Montre connectée</li>
+                    <li>Baskets running</li>
+                    <li>Sac à dos design</li>
+                    <li>Lunettes de soleil</li>
+                </ul>
+            `;
+            resultDiv.style.display = 'block';
+        });
+
+        // Smooth scroll pour les liens
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    navMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

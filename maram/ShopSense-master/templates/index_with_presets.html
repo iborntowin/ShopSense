@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Value Prediction - Test Profiles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        
+        .test-client-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            margin-bottom: 10px;
+        }
+        
+        .test-client-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-color: var(--primary-color);
+        }
+        
+        .test-client-card.selected {
+            border-color: var(--secondary-color);
+            background-color: #e8f5e9;
+        }
+        
+        .client-emoji {
+            font-size: 32px;
+            margin-right: 10px;
+        }
+        
+        .client-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .client-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .expected-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .expected-high {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .expected-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .expected-low {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 10px;
+        }
+        
+        .btn-predict {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            color: white;
+            transition: transform 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .result-card {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .prediction-badge {
+            font-size: 24px;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-table {
+            margin-top: 20px;
+        }
+        
+        .results-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .match-yes {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .match-no {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="text-center text-white mb-4">
+            <i class="fas fa-users"></i> Customer Value Prediction - Test Clients
+        </h1>
+        
+        <div class="row">
+            <!-- Test Clients Selection Panel -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-user-friends"></i> Test Clients</h4>
+                    </div>
+                    <div class="card-body" style="max-height: 800px; overflow-y: auto;">
+                        <p class="text-muted small">Click on a client to auto-fill the form</p>
+                        <div id="testClientsList"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Panel -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-edit"></i> Customer Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="predictionForm">
+                            <div class="mb-3">
+                                <label class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Annual Income ($)</label>
+                                <input type="number" class="form-control" id="income" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" id="gender" required>
+                                    {% for option in categories['Gender'] %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="category" required>
+                                    {% for option in categories['Category'] %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Previous Purchases</label>
+                                <input type="number" class="form-control" id="previous_purchases" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Review Rating (1-5)</label>
+                                <input type="number" class="form-control" id="review_rating" min="1" max="5" step="0.1" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Web Visits/Month</label>
+                                <input type="number" class="form-control" id="num_web_visits" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Subscription</label>
+                                <select class="form-select" id="subscription" required>
+                                    {% for option in categories['Subscription Status'] %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Shipping</label>
+                                <select class="form-select" id="shipping" required>
+                                    {% for option in categories['Shipping Type'] %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Discount</label>
+                                <select class="form-select" id="discount" required>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Promo Code</label>
+                                <select class="form-select" id="promo" required>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-predict">
+                                <i class="fas fa-magic"></i> Predict Customer Value
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Panel -->
+            <div class="col-lg-4">
+                <!-- Loading -->
+                <div class="loading" id="loading">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="spinner"></div>
+                            <p class="mt-3">Analyzing customer data...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Result -->
+                <div class="card result-card" id="resultCard">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-chart-pie"></i> Prediction Result</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <div id="selectedClientInfo" class="mb-3"></div>
+                            <span class="prediction-badge" id="predictionBadge"></span>
+                            <h5 class="mt-3">Confidence: <span id="probability"></span></h5>
+                            <p class="text-muted small" id="timestamp"></p>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div id="comparisonSection"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- All Results Table -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-table"></i> Test Results Summary</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped results-table" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Expected</th>
+                                <th>Actual Result</th>
+                                <th>Confidence</th>
+                                <th>Match</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    No predictions yet. Select a client and click predict.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Test client profiles
+        const testClients = [
+            {
+                id: 1,
+                emoji: "👑",
+                name: "Sarah VIP - Premium",
+                description: "Wealthy, loyal, highly engaged",
+                expected: "HIGH VALUE (80-95%)",
+                expectedClass: "expected-high",
+                data: {
+                    age: 42, income: 95000, gender: "Female", category: "Clothing",
+                    previous_purchases: 45, review_rating: 4.8, num_web_visits: 15,
+                    subscription: "Yes", shipping: "Express", discount: "No", promo: "No"
+                }
+            },
+            {
+                id: 2,
+                emoji: "💎",
+                name: "Michael Elite - Top Tier",
+                description: "High income, frequent buyer",
+                expected: "HIGH VALUE (75-90%)",
+                expectedClass: "expected-high",
+                data: {
+                    age: 38, income: 120000, gender: "Male", category: "Footwear",
+                    previous_purchases: 35, review_rating: 4.5, num_web_visits: 12,
+                    subscription: "Yes", shipping: "Express", discount: "No", promo: "No"
+                }
+            },
+            {
+                id: 3,
+                emoji: "⭐",
+                name: "Emma Engaged - Active",
+                description: "Very engaged and loyal",
+                expected: "HIGH VALUE (70-85%)",
+                expectedClass: "expected-high",
+                data: {
+                    age: 29, income: 65000, gender: "Female", category: "Accessories",
+                    previous_purchases: 28, review_rating: 4.2, num_web_visits: 18,
+                    subscription: "Yes", shipping: "Standard", discount: "Yes", promo: "No"
+                }
+            },
+            {
+                id: 4,
+                emoji: "📊",
+                name: "David Balanced - Average",
+                description: "Middle ground customer",
+                expected: "MEDIUM (45-65%)",
+                expectedClass: "expected-medium",
+                data: {
+                    age: 35, income: 60000, gender: "Male", category: "Clothing",
+                    previous_purchases: 10, review_rating: 4.0, num_web_visits: 5,
+                    subscription: "Yes", shipping: "Standard", discount: "Yes", promo: "Yes"
+                }
+            },
+            {
+                id: 5,
+                emoji: "🆕",
+                name: "Lisa Newcomer - New",
+                description: "High income but no history",
+                expected: "LOW VALUE (30-50%)",
+                expectedClass: "expected-low",
+                data: {
+                    age: 26, income: 75000, gender: "Female", category: "Footwear",
+                    previous_purchases: 2, review_rating: 4.0, num_web_visits: 3,
+                    subscription: "No", shipping: "Standard", discount: "Yes", promo: "Yes"
+                }
+            },
+            {
+                id: 6,
+                emoji: "💰",
+                name: "Robert Bargain Hunter",
+                description: "Price sensitive, low engagement",
+                expected: "LOW VALUE (25-45%)",
+                expectedClass: "expected-low",
+                data: {
+                    age: 31, income: 48000, gender: "Male", category: "Accessories",
+                    previous_purchases: 8, review_rating: 3.0, num_web_visits: 2,
+                    subscription: "No", shipping: "Standard", discount: "Yes", promo: "Yes"
+                }
+            },
+            {
+                id: 7,
+                emoji: "📉",
+                name: "Jessica Budget - Low",
+                description: "Low income, minimal purchases",
+                expected: "LOW VALUE (15-35%)",
+                expectedClass: "expected-low",
+                data: {
+                    age: 23, income: 28000, gender: "Female", category: "Accessories",
+                    previous_purchases: 3, review_rating: 2.5, num_web_visits: 1,
+                    subscription: "No", shipping: "Standard", discount: "Yes", promo: "Yes"
+                }
+            },
+            {
+                id: 8,
+                emoji: "❌",
+                name: "Mark Inactive",
+                description: "Very low engagement",
+                expected: "LOW VALUE (10-25%)",
+                expectedClass: "expected-low",
+                data: {
+                    age: 45, income: 35000, gender: "Male", category: "Clothing",
+                    previous_purchases: 1, review_rating: 1.5, num_web_visits: 0,
+                    subscription: "No", shipping: "Standard", discount: "Yes", promo: "Yes"
+                }
+            },
+            {
+                id: 9,
+                emoji: "🤔",
+                name: "Sophie Subscriber-Only",
+                description: "Has subscription but low else - BALANCE TEST",
+                expected: "MEDIUM (40-60%)",
+                expectedClass: "expected-medium",
+                data: {
+                    age: 19, income: 22000, gender: "Female", category: "Accessories",
+                    previous_purchases: 1, review_rating: 2.0, num_web_visits: 1,
+                    subscription: "Yes", shipping: "Standard", discount: "Yes", promo: "Yes"
+                }
+            },
+            {
+                id: 10,
+                emoji: "🎯",
+                name: "Alex No-Sub High-Value",
+                description: "No subscription but excellent metrics - BALANCE TEST",
+                expected: "HIGH VALUE (65-80%)",
+                expectedClass: "expected-high",
+                data: {
+                    age: 40, income: 95000, gender: "Male", category: "Footwear",
+                    previous_purchases: 40, review_rating: 4.9, num_web_visits: 20,
+                    subscription: "No", shipping: "Express", discount: "No", promo: "No"
+                }
+            }
+        ];
+        
+        let currentClient = null;
+        let testResults = [];
+        
+        // Populate test clients list
+        function populateTestClients() {
+            const container = document.getElementById('testClientsList');
+            testClients.forEach(client => {
+                const card = document.createElement('div');
+                card.className = 'card test-client-card';
+                card.innerHTML = `
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center">
+                            <span class="client-emoji">${client.emoji}</span>
+                            <div class="flex-grow-1">
+                                <div class="client-name">${client.name}</div>
+                                <div class="client-desc">${client.description}</div>
+                                <span class="expected-badge ${client.expectedClass} mt-1">${client.expected}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => selectClient(client, card);
+                container.appendChild(card);
+            });
+        }
+        
+        // Select client and auto-fill form
+        function selectClient(client, cardElement) {
+            currentClient = client;
+            
+            // Update selected styling
+            document.querySelectorAll('.test-client-card').forEach(c => c.classList.remove('selected'));
+            cardElement.classList.add('selected');
+            
+            // Auto-fill form
+            const data = client.data;
+            document.getElementById('age').value = data.age;
+            document.getElementById('income').value = data.income;
+            document.getElementById('gender').value = data.gender;
+            document.getElementById('category').value = data.category;
+            document.getElementById('previous_purchases').value = data.previous_purchases;
+            document.getElementById('review_rating').value = data.review_rating;
+            document.getElementById('num_web_visits').value = data.num_web_visits;
+            document.getElementById('subscription').value = data.subscription;
+            document.getElementById('shipping').value = data.shipping;
+            document.getElementById('discount').value = data.discount;
+            document.getElementById('promo').value = data.promo;
+            
+            // Scroll to form
+            document.getElementById('predictionForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultCard').style.display = 'none';
+            
+            // Collect form data
+            const formData = {
+                age: document.getElementById('age').value,
+                income: document.getElementById('income').value,
+                gender: document.getElementById('gender').value,
+                category: document.getElementById('category').value,
+                previous_purchases: document.getElementById('previous_purchases').value,
+                review_rating: document.getElementById('review_rating').value,
+                num_web_visits: document.getElementById('num_web_visits').value,
+                subscription: document.getElementById('subscription').value,
+                shipping: document.getElementById('shipping').value,
+                payment: "Credit Card",
+                discount: document.getElementById('discount').value,
+                promo: document.getElementById('promo').value
+            };
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    displayResults(result);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Request failed: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+        
+        // Display results
+        function displayResults(result) {
+            const badge = document.getElementById('predictionBadge');
+            const prediction = result.prediction;
+            const highProb = result.probability.high_value;
+            const lowProb = result.probability.low_value;
+            
+            // Set prediction badge
+            if (prediction === 1) {
+                badge.textContent = `HIGH VALUE (${(highProb * 100).toFixed(1)}%)`;
+                badge.className = 'prediction-badge badge bg-success';
+            } else {
+                badge.textContent = `LOW VALUE (${(lowProb * 100).toFixed(1)}%)`;
+                badge.className = 'prediction-badge badge bg-danger';
+            }
+            
+            // Set probability
+            document.getElementById('probability').textContent = `${(Math.max(highProb, lowProb) * 100).toFixed(1)}%`;
+            
+            // Set timestamp
+            document.getElementById('timestamp').textContent = `Predicted at: ${new Date().toLocaleString()}`;
+            
+            // Show selected client info
+            if (currentClient) {
+                document.getElementById('selectedClientInfo').innerHTML = `
+                    <h5>${currentClient.emoji} ${currentClient.name}</h5>
+                    <p class="text-muted small">${currentClient.description}</p>
+                `;
+                
+                // Show comparison
+                const isMatch = checkMatch(currentClient.expected, prediction, highProb);
+                document.getElementById('comparisonSection').innerHTML = `
+                    <h6>Comparison:</h6>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Expected:</strong><br>
+                            <span class="badge ${currentClient.expectedClass}">${currentClient.expected}</span>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-arrow-right fa-2x text-muted"></i>
+                        </div>
+                        <div>
+                            <strong>Actual:</strong><br>
+                            <span class="badge ${prediction === 1 ? 'bg-success' : 'bg-danger'}">
+                                ${prediction === 1 ? 'HIGH' : 'LOW'} VALUE (${(highProb * 100).toFixed(1)}%)
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <span class="${isMatch ? 'match-yes' : 'match-no'}">
+                            ${isMatch ? '✓ Match!' : '✗ No Match'}
+                        </span>
+                    </div>
+                `;
+                
+                // Add to results table
+                addToResultsTable(currentClient, prediction, highProb, lowProb, isMatch);
+            }
+            
+            // Show results card
+            document.getElementById('resultCard').style.display = 'block';
+            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Check if prediction matches expectation
+        function checkMatch(expected, prediction, highProb) {
+            const expectedUpper = expected.toUpperCase();
+            if (expectedUpper.includes('HIGH') && prediction === 1) return true;
+            if (expectedUpper.includes('LOW') && prediction === 0) return true;
+            if (expectedUpper.includes('MEDIUM') && highProb >= 0.35 && highProb <= 0.65) return true;
+            return false;
+        }
+        
+        // Add result to table
+        function addToResultsTable(client, prediction, highProb, lowProb, isMatch) {
+            const tbody = document.getElementById('resultsTableBody');
+            
+            // Remove "no predictions" row if exists
+            if (tbody.querySelector('td[colspan]')) {
+                tbody.innerHTML = '';
+            }
+            
+            // Check if client already tested
+            const existingRow = tbody.querySelector(`tr[data-client-id="${client.id}"]`);
+            if (existingRow) {
+                existingRow.remove();
+            }
+            
+            const row = document.createElement('tr');
+            row.setAttribute('data-client-id', client.id);
+            row.innerHTML = `
+                <td>${client.emoji} ${client.name}</td>
+                <td><span class="badge ${client.expectedClass}">${client.expected}</span></td>
+                <td><span class="badge ${prediction === 1 ? 'bg-success' : 'bg-danger'}">
+                    ${prediction === 1 ? 'HIGH' : 'LOW'} VALUE
+                </span></td>
+                <td>${(Math.max(highProb, lowProb) * 100).toFixed(1)}%</td>
+                <td class="${isMatch ? 'match-yes' : 'match-no'}">${isMatch ? '✓ Match' : '✗ No Match'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="selectClientById(${client.id})">
+                        <i class="fas fa-redo"></i> Retest
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+        
+        // Select client by ID
+        function selectClientById(id) {
+            const client = testClients.find(c => c.id === id);
+            const card = document.querySelectorAll('.test-client-card')[id - 1];
+            if (client && card) {
+                selectClient(client, card);
+            }
+        }
+        
+        // Initialize
+        populateTestClients();
+    </script>
+</body>
+</html>
