@@ -367,18 +367,18 @@ def predict():
             prob_low_value = float(probability[0])
             prob_high_value = float(probability[1])
             if prob_high_value > 0.7:
-                segment = 'High Potential'
+                segment = 'Potentiel Élevé'
                 color = 'success'
             elif prob_high_value > 0.3:
-                segment = 'Medium Potential'
+                segment = 'Potentiel Moyen'
                 color = 'warning'
             else:
-                segment = 'Low Potential'
+                segment = 'Potentiel Faible'
                 color = 'danger'
         else:
             prob_high_value = float(prediction)
             prob_low_value = 1.0 - float(prediction)
-            segment = 'High Value' if prediction == 1 else 'Not High Value'
+            segment = 'Haute Valeur' if prediction == 1 else 'Valeur Standard'
             color = 'success' if prediction == 1 else 'danger'
         
         # Prepare response with correct format for both interfaces
@@ -469,34 +469,34 @@ def segment():
 
 def get_recommendation(segment, probability):
     """Generate marketing recommendations based on customer segment"""
-    if segment == 'High Potential':
+    if segment == 'Potentiel Élevé':
         return {
-            'title': '🎯 High Priority Customer',
+            'title': '🎯 Client Prioritaire',
             'actions': [
-                'Target with premium offers and exclusive deals',
-                'Enroll in VIP loyalty program',
-                'Personalized product recommendations',
-                'Priority customer service'
+                'Cibler avec des offres premium et exclusives',
+                'Inscrire au programme de fidélité VIP',
+                'Recommandations de produits personnalisées',
+                'Service client prioritaire'
             ]
         }
-    elif segment == 'Medium Potential':
+    elif segment == 'Potentiel Moyen':
         return {
-            'title': '📈 Medium Priority Customer',
+            'title': '📈 Client Priorité Moyenne',
             'actions': [
-                'Send targeted promotional campaigns',
-                'Offer limited-time discounts',
-                'Encourage product reviews',
-                'A/B test different marketing messages'
+                'Envoyer des campagnes promotionnelles ciblées',
+                'Offrir des réductions limitées dans le temps',
+                'Encourager les avis produits',
+                'Tester différents messages marketing'
             ]
         }
     else:
         return {
-            'title': '📧 Nurturing Customer',
+            'title': '📧 Client à Développer',
             'actions': [
-                'Low-cost email marketing campaigns',
-                'Educational content and product guides',
-                'Seasonal newsletters',
-                'Re-engagement campaigns'
+                'Campagnes email à faible coût',
+                'Contenu éducatif et guides produits',
+                'Newsletters saisonnières',
+                'Campagnes de réengagement'
             ]
         }
 
