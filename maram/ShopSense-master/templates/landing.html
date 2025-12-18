@@ -378,9 +378,53 @@
 
         .form-actions {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             margin-top: 2rem;
             justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            min-width: 180px;
+            padding: 1.1rem 2.5rem;
+            background: linear-gradient(135deg, #d4a5a5 0%, #c28f8f 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 165, 165, 0.4);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 165, 165, 0.5);
+            background: linear-gradient(135deg, #c28f8f 0%, #b8857d 100%);
+        }
+
+        .button-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+            opacity: 0.95;
+        }
+
+        .button-secondary:hover {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+            box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+            opacity: 1;
         }
 
         .result-display {
@@ -622,7 +666,7 @@
                 <a href="#services" class="btn">Explorer les Outils</a>
             </div>
             <div class="hero__visual">
-                <img src="aa.jpg" alt="Shopping Experience" class="hero__image">
+                <img src="aa.jpg" alt="Expérience Shopping" class="hero__image">
             </div>
         </div>
     </section>
@@ -755,15 +799,15 @@
                 <input type="hidden" name="form_type" value="segmentation">
 
                 <div class="form-group">
-                    <label>Income ($)</label>
+                    <label>Revenu ($)</label>
                     <input type="number" name="Income" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label>Age</label>
+                    <label>Âge</label>
                     <input type="number" name="Age" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label>Vetement</label>
+                    <label>Pantalon</label>
                     <input type="number" name="Wines" min="0" required>
                 </div>
                 <div class="form-group">
@@ -923,18 +967,80 @@
         }
 
         // Soumettre le formulaire d'évaluation client
-        document.getElementById('customerValueForm').addEventListener('submit', (e) => {
+        document.getElementById('customerValueForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const resultDiv = document.getElementById('customerValueResult');
             const contentDiv = document.getElementById('customerValueContent');
             
-            // Simulation de résultat
-            contentDiv.innerHTML = `
-                <p><strong>Score de valeur:</strong> 87/100</p>
-                <p><strong>Catégorie:</strong> Client Premium</p>
-                <p><strong>Recommandation:</strong> Offrir des avantages VIP et promotions exclusives</p>
-            `;
+            // Get form data
+            const formData = new FormData(document.getElementById('customerValueForm'));
+            const data = {
+                age: parseInt(formData.get('age')),
+                income: parseFloat(formData.get('income')),
+                gender: formData.get('gender'),
+                category: formData.get('category'),
+                previous_purchases: parseInt(formData.get('previous_purchases')),
+                review_rating: parseFloat(formData.get('review_rating')),
+                num_web_visits: parseInt(formData.get('num_web_visits')),
+                subscription: formData.get('subscription'),
+                shipping: formData.get('shipping'),
+                discount: formData.get('discount'),
+                promo: formData.get('promo') || 'No'
+            };
+            
+            // Show loading
+            contentDiv.innerHTML = '<p style="text-align: center;"><em>Analyse en cours...</em></p>';
             resultDiv.style.display = 'block';
+            resultDiv.style.background = '#f8f9fa';
+            resultDiv.style.color = '#333';
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    contentDiv.innerHTML = `<p style="color: #dc3545;"><strong>Erreur:</strong> ${result.error}</p>`;
+                    resultDiv.style.background = '#ffebee';
+                } else {
+                    // Set background color based on result
+                    let backgroundColor = result.color === 'success' ? '#d4edda' : 
+                                         result.color === 'warning' ? '#fff3cd' : '#f8d7da';
+                    let textColor = result.color === 'success' ? '#155724' : 
+                                   result.color === 'warning' ? '#856404' : '#721c24';
+                    let badgeColor = result.color === 'success' ? '#28a745' : 
+                                    result.color === 'warning' ? '#ffc107' : '#dc3545';
+                    
+                    resultDiv.style.background = backgroundColor;
+                    resultDiv.style.color = textColor;
+                    
+                    let html = `
+                        <div style="text-align: center; margin: 20px 0;">
+                            <span style="font-size: 1.5em; padding: 10px 20px; background: ${badgeColor}; color: white; border-radius: 8px; display: inline-block; font-weight: 600;">${result.segment}</span>
+                        </div>
+                        <p><strong>Probabilité:</strong> ${result.probability_display}</p>
+                        <h4 style="margin-top: 20px; color: ${textColor};">${result.recommendation.title}</h4>
+                        <ul style="text-align: left; margin-top: 10px; line-height: 1.8;">
+                    `;
+                    
+                    result.recommendation.actions.forEach(action => {
+                        html += `<li style="margin: 8px 0;">${action}</li>`;
+                    });
+                    
+                    html += '</ul>';
+                    
+                    contentDiv.innerHTML = html;
+                }
+            } catch (error) {
+                contentDiv.innerHTML = `<p style="color: #dc3545;"><strong>Erreur:</strong> ${error.message}</p>`;
+                resultDiv.style.background = '#ffebee';
+            }
         });
 
         // Soumettre le formulaire de segmentation
@@ -982,22 +1088,56 @@
         });
 
         // Soumettre le formulaire de recommandations
-        document.getElementById('recommendForm').addEventListener('submit', (e) => {
+        document.getElementById('recommendForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const resultDiv = document.getElementById('recommendResult');
             const contentDiv = document.getElementById('recommendContent');
             
-            contentDiv.innerHTML = `
-                <p><strong>Recommandations personnalisées:</strong></p>
-                <ul style="text-align: left; margin-top: 1rem;">
-                    <li>Veste en cuir premium</li>
-                    <li>Montre connectée</li>
-                    <li>Baskets running</li>
-                    <li>Sac à dos design</li>
-                    <li>Lunettes de soleil</li>
-                </ul>
-            `;
+            // Get form values
+            const formData = new FormData(document.getElementById('recommendForm'));
+            const customerId = parseInt(formData.get('customer_id'));
+            const topN = parseInt(formData.get('top_n_recommend'));
+            
+            // Show loading state
+            contentDiv.innerHTML = '<p style="text-align: center;"><em>Chargement des recommandations...</em></p>';
             resultDiv.style.display = 'block';
+            
+            try {
+                const response = await fetch('/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        customer_id: customerId,
+                        top_n: topN
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    let html = `
+                        <p><strong>Client ID:</strong> ${result.customer_id}</p>
+                        <p><strong>Article acheté:</strong> ${result.purchased_item}</p>
+                        <p><strong>Segment:</strong> ${result.segment}</p>
+                        <h4 style="margin-top: 1.5rem;">Recommandations (${result.recommendations.length}):</h4>
+                        <ol style="text-align: left; margin-top: 1rem;">
+                    `;
+                    
+                    result.recommendations.forEach(rec => {
+                        html += `<li>${rec.item} <span style="color: #888;">(Score: ${rec.score.toFixed(4)})</span></li>`;
+                    });
+                    
+                    html += '</ol>';
+                    
+                    contentDiv.innerHTML = html;
+                } else {
+                    contentDiv.innerHTML = `<p style="color: #dc3545;"><strong>Erreur:</strong> ${result.error || 'Une erreur est survenue'}</p>`;
+                }
+            } catch (error) {
+                contentDiv.innerHTML = `<p style="color: #dc3545;"><strong>Erreur:</strong> ${error.message}</p>`;
+            }
         });
 
         // Smooth scroll pour les liens

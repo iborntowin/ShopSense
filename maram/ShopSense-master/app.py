@@ -50,19 +50,19 @@ else:
 
 # Options for categorical fields
 CATEGORIES = {
-    'Gender': ['Male', 'Female'],
-    'Category': ['Clothing', 'Footwear', 'Accessories', 'Outerwear'],
+    'Gender': ['Homme', 'Femme'],
+    'Category': ['Pantalon', 'Chaussures', 'Accessoires', 'Vêtements d\'extérieur'],
     'Location': ['California', 'New York', 'Texas', 'Florida', 'Illinois', 'Nevada', 'Ohio', 
                  'Pennsylvania', 'Washington', 'Oregon', 'Arizona', 'Colorado', 'Georgia'],
     'Size': ['S', 'M', 'L', 'XL'],
-    'Color': ['Red', 'Blue', 'Green', 'Black', 'White', 'Yellow', 'Pink', 'Purple', 'Gray', 'Orange'],
-    'Season': ['Spring', 'Summer', 'Fall', 'Winter'],
-    'Subscription Status': ['Yes', 'No'],
-    'Shipping Type': ['Standard', 'Express', 'Free Shipping', 'Next Day Air', '2-Day Shipping', 'Store Pickup'],
-    'Payment Method': ['Credit Card', 'PayPal', 'Debit Card', 'Venmo', 'Cash', 'Bank Transfer'],
-    'Frequency of Purchases': ['Weekly', 'Fortnightly', 'Monthly', 'Quarterly', 'Annually', 'Bi-Weekly', 'Every 3 Months'],
-    'Discount Applied': ['Yes', 'No'],
-    'Promo Code Used': ['Yes', 'No']
+    'Color': ['Rouge', 'Bleu', 'Vert', 'Noir', 'Blanc', 'Jaune', 'Rose', 'Violet', 'Gris', 'Orange'],
+    'Season': ['Printemps', 'Été', 'Automne', 'Hiver'],
+    'Subscription Status': ['Oui', 'Non'],
+    'Shipping Type': ['Standard', 'Express', 'Livraison gratuite', 'Jour suivant', '2 jours', 'Retrait en magasin'],
+    'Payment Method': ['Carte de crédit', 'PayPal', 'Carte de débit', 'Venmo', 'Espèces', 'Virement bancaire'],
+    'Frequency of Purchases': ['Hebdomadaire', 'Bimensuel', 'Mensuel', 'Trimestriel', 'Annuel', 'Bi-hebdomadaire', 'Tous les 3 mois'],
+    'Discount Applied': ['Oui', 'Non'],
+    'Promo Code Used': ['Oui', 'Non']
 }
 
 @app.route('/')
@@ -530,7 +530,7 @@ def health():
 # Load recommendation system
 recommendation_system_loaded = False
 try:
-    from predict import get_recommendations, get_available_items, get_customer_info, get_segment_popular_items
+    from recommand_model.predict import get_recommendations, get_available_items, get_customer_info, get_segment_popular_items
     recommendation_system_loaded = True
     print("✓ Recommendation system loaded successfully!")
 except Exception as e:

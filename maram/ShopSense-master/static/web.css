@@ -505,17 +505,36 @@ img{
 
 .form-buttons{
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
+  align-items: center;
   margin-top: var(--mb-4);
+  flex-wrap: wrap;
+}
+
+.form-buttons .button{
+  min-width: 180px;
+  padding: 1.1rem 2.5rem;
+  font-size: 1.05rem;
+  font-weight: var(--font-semi-bold);
+  transition: all 0.3s ease;
+}
+
+.form-buttons .button:hover{
+  transform: translateY(-2px);
 }
 
 .button-secondary{
-  background-color: var(--text-color-light);
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: #FFF;
+  box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+  opacity: 0.95;
 }
 
 .button-secondary:hover{
-  background-color: var(--text-color);
+  background: linear-gradient(135deg, #475569 0%, #334155 100%);
+  box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+  opacity: 1;
 }
 
 .result-display{
